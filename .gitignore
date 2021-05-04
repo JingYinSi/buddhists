@@ -1,0 +1,8 @@
+.idea/
+.nyc_output/
+coverage/
+.vscode/
+node_modules/
+uploads/
+test/data/
+*.env
