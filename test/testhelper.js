@@ -3,41 +3,25 @@
  */
 var chai = require('chai'),
     sinon = require('sinon'),
+    chaiXml = require('chai-xml'),
     sinonChai = require('sinon-chai');
 
 var chaiAsPromised = require("chai-as-promised");
+
 chai.use(chaiAsPromised);
 
 var sinonStubPromise = require('sinon-stub-promise');
 sinonStubPromise(sinon);
 
-global.dbURI = 'mongodb://127.0.0.1:27017/testLivingforest';
-global.mongoose = require('mongoose')
-mongoose.connect(dbURI, {
-    useCreateIndex: true,
-    useNewUrlParser: true
-  })
+global.dbURI = 'mongodb://127.0.0.1:27017/test';
 global.clearDB = require('@finelets/hyper-rest/db/mongoDb/clearDB')(dbURI);
 
 global.expect = chai.expect;
 global.assert = chai.assert;
 global.sinon = sinon;
 global.should = require('should');
+chai.use(chaiXml);
 chai.use(sinonChai);
-
-global.createSpyReturnsResult = (result) => {
-    const spy = sinon.spy(() => {
-        return result
-    })
-    return spy
-}
-
-global.dbSave = (model, data) => {
-    return new model(data).save()
-        .then((data) => {
-            return data.toJSON()
-        })
-}
 
 global.insertDocsInSequential = function insertDocsInSequential(model, docs, callback) {
     var result = [];

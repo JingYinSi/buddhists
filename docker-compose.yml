@@ -32,4 +32,4 @@ services:
     links:
         - jsm_cross:cross
     ports:
-        - "8090:8090"
+        - "80:80"
