@@ -1,5 +1,4 @@
-const dbSave = require('./dbSave'),
-	{ expect } = require('chai');
+const { expect } = require('chai');
 
 describe('Employee', () => {
 	let err;

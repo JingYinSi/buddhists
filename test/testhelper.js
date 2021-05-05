@@ -23,6 +23,13 @@ global.should = require('should');
 chai.use(chaiXml);
 chai.use(sinonChai);
 
+global.dbSave = (schema, data) => {
+    return new schema(data).save()
+        .then((data) => {
+            return data.toJSON()
+        })
+    }
+
 global.insertDocsInSequential = function insertDocsInSequential(model, docs, callback) {
     var result = [];
 

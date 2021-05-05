@@ -1,4 +1,3 @@
-var dbSave = require('./dbSave');
 
 describe('权限管理', function () {
 	const ID_NOT_EXIST = '5ce79b99da3537277c3f3b66'
