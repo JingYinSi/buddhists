@@ -7,9 +7,9 @@ describe('Employee', () => {
 
 	let schema, testTarget, id, __v
 
-	beforeEach(function (done) {
+	beforeEach(function () {
 		err = new Error('any error message');
-		return clearDB(done);
+		return clearDB();
 	})
 
 	describe('Employee Pic changed', () => {

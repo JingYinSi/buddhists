@@ -13,8 +13,8 @@ describe('权限管理', function () {
 	describe('用户', () => {
 		const entity = require('../server/biz/bas/Employee')
 
-		beforeEach((done) => {
-			return clearDB(done);
+		beforeEach(() => {
+			return clearDB();
 		})
 
 		// TODO: 注册用户时的数据校验

@@ -4,9 +4,9 @@ describe('LivingForest', () => {
 	let schema, testTarget, toCreate;
 	let id, __v;
 
-	beforeEach(function (done) {
+	beforeEach(function () {
 		__v = 0
-		return clearDB(done);
+		return clearDB();
 	});
 
 	describe('Lessons - 功课', () => {
