@@ -1,3 +1,4 @@
+const { expect } = require('chai');
 
 describe('LivingForest', () => {
 	const ID_NOT_EXIST = '5ce79b99da3537277c3f3b66'
@@ -6,6 +7,10 @@ describe('LivingForest', () => {
 
 	beforeEach(function () {
 		__v = 0
+		return clearDB();
+	});
+
+	afterEach(function () {
 		return clearDB();
 	});
 
@@ -22,22 +27,44 @@ describe('LivingForest', () => {
 			testTarget = require('../server/biz/Lesson');
 		});
 
-		it('搜索 - 字段包括code,name,desc', () => {
-			let records = []
-			records.push(dbSave(schema, {code: 'fee', name: '001'}))
-			records.push(dbSave(schema, {code: 'foo', name: '002'}))
-			records.push(dbSave(schema, {code: 'fuu', name: 'foo'}))
-			records.push(dbSave(schema, {desc: 'desc1oo', code: 'fff', name: '003'}))
-			return Promise.all(records)
-				.then(() => {
-					return testTarget.search({}, 'oo')
+		it('加载 - 字段包括id,code,name,desc,start,times,quantity', () => {
+			start = new Date()
+			return dbSave(schema, {code: 'foo', name: '001', desc: 'desc1oo', start})
+				.then((data) => {
+					return testTarget.findById(data.id)
 				})
 				.then(data => {
-					expect(data.length).eqls(3)
+					expect(data).eqls({id: data.id, code: 'foo', name: '001', desc: 'desc1oo', start: start.toJSON(), times: 0, quantity: 0})
 				})
-				.catch(e => {
-					throw e
-				})
+		})
+
+		describe('搜索', () => {
+			it('搜索 - 字段包括code,name,desc', () => {
+				data = [
+					{code: 'fee', name: '001'},
+					{code: 'foo', name: '002'},
+					{code: 'fuu', name: 'foo'},
+					{desc: 'desc1oo', code: 'fff', name: '003'}
+				]
+				return schema.insertMany(data)
+					.then(() => {
+						return testTarget.search({}, 'oo')
+					})
+					.then(data => {
+						expect(data.length).eqls(3)
+					})
+			})
+	
+			it('搜索 - 字段包括id,code,name,times,quantity', () => {
+				return dbSave(schema, {code: 'foo', name: '001', desc: 'desc1oo'})
+					.then(() => {
+						return testTarget.search({}, 'oo')
+					})
+					.then(data => {
+						doc = data[0]
+						expect(doc).eqls({id: doc.id, code: 'foo', name: '001', times: 0, quantity: 0})
+					})
+			})
 		})
 
 		describe('创建', () => {
@@ -77,6 +104,10 @@ describe('LivingForest', () => {
 						expect(doc.code).eql(code)
 						expect(doc.name).eql(name)
 						expect(doc.desc).eql(desc)
+						expect(doc.applies.length).eql(0)
+						expect(doc.start).undefined
+						expect(doc.times).eql(0)
+						expect(doc.quantity).eql(0)
 					})
 			})
 		})
@@ -93,6 +124,42 @@ describe('LivingForest', () => {
 					expect(doc.name).eql(name)
 					expect(doc.desc).eql(desc)
 				})
+		})
+
+		describe('报修量', () => {
+			const quantity = 1000,
+				creator = ID_NOT_EXIST
+
+			let lessonDoc, lesson, workDoc
+
+			beforeEach(() => {
+				return dbSave(schema, toCreate)
+					.then(doc => {
+						lessonDoc = doc
+						lesson = doc.id
+					})
+			})
+
+			it('功课不存在', async () => {
+				lesson = ID_NOT_EXIST
+				work = {lesson}
+				await expect(testTarget.apply(work)).to.be.rejectedWith()
+			})
+
+			it('申报成功', async () => {
+				work = {lesson, quantity, creator}
+				workDoc1 = await testTarget.apply(work)
+				workDoc2 = await testTarget.apply(work)
+				doc = await schema.findById(lesson)
+				doc = doc.toJSON()
+				expect(doc.start).eql(workDoc1.date)
+				expect(doc.quantity).eql(quantity * 2)
+				expect(doc.applies.length).eql(2)
+				expect(doc.applies[0]).eql({id: workDoc1.id, quantity, creator, date: workDoc1.date})
+				expect(doc.applies[1]).eql({id: workDoc2.id, quantity, creator, date: workDoc2.date})
+			})
+
+
 		})
 	})
 })
