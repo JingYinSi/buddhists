@@ -14,6 +14,66 @@ describe('LivingForest', () => {
 		return clearDB();
 	});
 
+	describe('Activaties - 功课', () => {
+		const name = 'foo'
+			
+		beforeEach(() => {
+			schema = require('../db/schema/Activaty');
+			testTarget = require('../server/biz/Activaty');
+		});
+
+		it('加载 - 字段包括id,name', () => {
+			start = new Date()
+			return dbSave(schema, {name})
+				.then((data) => {
+					return testTarget.findById(data.id)
+				})
+				.then(data => {
+					expect(data).eqls({id: data.id, name})
+				})
+		})
+
+		describe('创建', () => {
+			it('名称非空', () => {
+				return testTarget.create({})
+					.should.be.rejectedWith()
+			})
+
+			it('名称必须唯一', () => {
+				return testTarget.create({name})
+					.then(() => {
+						return testTarget.create({name})
+					})
+					.should.be.rejectedWith()
+			})
+
+			it('创建活动', () => {
+				return testTarget.create({name})
+					.then(doc => {
+						return schema.findById(doc.id)
+					})
+					.then(doc => {
+						doc = doc.toJSON()
+						expect(doc.name).eql(name)
+						expect(doc.stages.length).eql(0)
+					})
+			})
+		})
+
+		it('更新 - only name is updateable', () => {	
+			newName = 'ffff'			
+			return dbSave(schema, {name})
+				.then(doc => {
+					id = doc.id
+					__v = doc.__v
+					expect(doc.name).eql(name)
+					return testTarget.update({id, __v, name: newName})
+				})
+				.then(doc => {
+					expect(doc.name).eql(newName)
+				})
+		})
+	})
 	describe('Lessons - 功课', () => {
 		const name = 'foo',
 			code = 'code',

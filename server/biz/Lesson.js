@@ -1,4 +1,3 @@
-const { expectation } = require('sinon')
 const schema = require('../../db/schema/Lesson'),
 	createEntity = require('@finelets/hyper-rest/db/mongoDb/DbEntity')
 
