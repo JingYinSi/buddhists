@@ -1,9 +1,18 @@
 module.exports = {
     Entry: {
+        activaties: 'Activaties',
         lessons: 'Lessons',
         users: 'Users',
         register: 'RegisterUser',
         currentUser: 'CurrentUser'
+    },
+    Activaties: {
+        add: 'Activaties',
+        home: 'Entry'
+    },
+    Activaty: {
+        self: "Activaty",
+        collection: "Activaties"
     },
     Lessons: {
         add: 'Lessons',
