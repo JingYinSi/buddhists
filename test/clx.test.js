@@ -1,4 +1,4 @@
-const { expect } = require('chai');
+const { expect } = require('chai')
 
 describe('LivingForest', () => {
 	const ID_NOT_EXIST = '5ce79b99da3537277c3f3b66'
@@ -14,7 +14,7 @@ describe('LivingForest', () => {
 		return clearDB();
 	});
 
-	describe('Activaties - 功课', () => {
+	describe('Activaties - 活动', () => {
 		const name = 'foo'
 			
 		beforeEach(() => {
@@ -72,6 +72,55 @@ describe('LivingForest', () => {
 				.then(doc => {
 					expect(doc.name).eql(newName)
 				})
+		})
+
+		describe('阶段', () => {
+			let activatyId
+			const stage = 'stage'
+			beforeEach(() => {
+				return dbSave(schema, {name})
+					.then(doc => {
+						activatyId = doc.id
+					})
+			})
+
+			it('列表', () => {
+				stages = [{},  {name: stage}]
+				return schema.findById(activatyId)
+					.then(doc => {
+						doc.stages.push(stages[0])
+						doc.stages.push(stages[1])
+						return doc.save()
+					})
+					.then((doc) => {
+						stages = doc.stages
+						return testTarget.listStages(doc.id)
+					})
+					.then(list => {
+						expect(list).eqls([{id: stages[0].id}, {id: stages[1].id, name: stage}])
+					})
+			})
+
+			describe('新增', () => {
+				it('活动不存在', () => {
+					return testTarget.createStage(ID_NOT_EXIST, {})
+						.should.be.rejectedWith()
+				})
+
+				it('最简单', () => {
+					return testTarget.createStage(activatyId, {})
+						.then(doc => {
+							expect(doc).eql({activaty: activatyId, id: doc.id})
+						})
+				})
+
+				it('成功', () => {
+					return testTarget.createStage(activatyId, {name: stage})
+						.then(doc => {
+							expect(doc).eql({activaty: activatyId, id: doc.id, name: stage})
+						})
+				})
+			})
 		})
 	})
 	describe('Lessons - 功课', () => {
