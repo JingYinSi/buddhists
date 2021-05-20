@@ -1,4 +1,5 @@
-const { expect } = require('chai')
+const { expect } = require('chai'),
+{pick, map} = require('underscore')
 
 describe('LivingForest', () => {
 	const ID_NOT_EXIST = '5ce79b99da3537277c3f3b66'
@@ -22,7 +23,7 @@ describe('LivingForest', () => {
 			testTarget = require('../server/biz/Activaty');
 		});
 
-		it('加载 - 字段包括id,name', () => {
+		it('加载活动 - 字段包括id,name', () => {
 			start = new Date()
 			return dbSave(schema, {name})
 				.then((data) => {
@@ -33,13 +34,13 @@ describe('LivingForest', () => {
 				})
 		})
 
-		describe('创建', () => {
-			it('名称非空', () => {
+		describe('创建活动', () => {
+			it('活动名称非空', () => {
 				return testTarget.create({})
 					.should.be.rejectedWith()
 			})
 
-			it('名称必须唯一', () => {
+			it('活动名称必须唯一', () => {
 				return testTarget.create({name})
 					.then(() => {
 						return testTarget.create({name})
@@ -60,7 +61,7 @@ describe('LivingForest', () => {
 			})
 		})
 
-		it('更新 - only name is updateable', () => {	
+		it('更新活动 - only name is updateable', () => {	
 			newName = 'ffff'			
 			return dbSave(schema, {name})
 				.then(doc => {
@@ -74,7 +75,7 @@ describe('LivingForest', () => {
 				})
 		})
 
-		describe('阶段', () => {
+		describe('Activaty.Stage - 活动阶段', () => {
 			let activatyId
 			const stage = 'stage'
 			beforeEach(() => {
@@ -84,7 +85,7 @@ describe('LivingForest', () => {
 					})
 			})
 
-			it('列表', () => {
+			it('活动阶段列表', () => {
 				stages = [{},  {name: stage}]
 				return schema.findById(activatyId)
 					.then(doc => {
@@ -101,23 +102,110 @@ describe('LivingForest', () => {
 					})
 			})
 
-			describe('新增', () => {
+			describe('新增活动阶段', () => {
 				it('活动不存在', () => {
 					return testTarget.createStage(ID_NOT_EXIST, {})
 						.should.be.rejectedWith()
 				})
 
-				it('最简单', () => {
+				it('创建最简单的活动阶段', () => {
 					return testTarget.createStage(activatyId, {})
 						.then(doc => {
 							expect(doc).eql({activaty: activatyId, id: doc.id})
 						})
 				})
 
-				it('成功', () => {
+				it('成功创建活动阶段', () => {
 					return testTarget.createStage(activatyId, {name: stage})
 						.then(doc => {
 							expect(doc).eql({activaty: activatyId, id: doc.id, name: stage})
+						})
+				})
+			})
+
+			describe('Activaty.Stage.Lesson - 活动阶段功课', () => {
+				const lessonSchema = require('../db/schema/Lesson'),
+				start = new Date().toJSON()
+				let lessonInDb, stageId, lessonId
+
+				beforeEach(() => {
+					return lessonSchema.insertMany([{name: 'foo'}, {name: 'fee'}, {name: 'fuu'}])
+						.then(docs => {
+							lessonInDb = docs
+							return schema.findById(activatyId)
+						})
+						.then(doc => {
+							doc.stages.push({name: stage, lessons: [{lesson: lessonInDb[0].id, start}]})
+							return doc.save()
+						})
+						.then(doc => {
+							stageId = doc.stages[0].id
+							lessonId = doc.stages[0].lessons[0].id
+						})
+				})
+				
+				it('创建指定活动阶段的功课', () => {
+					lessonRef = lessonInDb[1].id
+					let newLessonId
+					return testTarget.createLesson(stageId, {lesson: lessonRef})
+						.then(doc => {
+							newLessonId = doc.id
+							return schema.findById(activatyId)
+						})
+						.then(doc => {
+							doc = doc.toJSON()
+							expect(doc.stages[0].lessons).eql([
+								{id: lessonId, lesson: lessonInDb[0].id, start, times: 0, quantity: 0},
+								{id: newLessonId, lesson: lessonRef, times: 0, quantity: 0},
+							])
+						})
+				})
+
+				it('列出指定活动阶段的所有功课', () => {
+					return schema.findById(activatyId)
+						.then(doc => {
+							doc.stages[0].lessons.push({lesson: lessonInDb[2].id, start})
+							doc.stages[0].lessons.push({lesson: lessonInDb[1].id})
+							return doc.save()
+						})
+						.then(() => {
+							return testTarget.listLessons(stageId)
+						})
+						.then(docs => {
+							expect(docs).eql([
+								{id: docs[0].id, lesson: lessonInDb[0].id, start, times: 0, quantity: 0},
+								{id: docs[1].id, lesson: lessonInDb[2].id, start, times: 0, quantity: 0},
+								{id: docs[2].id, lesson: lessonInDb[1].id, times: 0, quantity: 0}
+							])
+						})
+				})
+				
+				it('加载指定的活动阶段功课', () => {
+					return testTarget.loadLesson(lessonId)
+						.then(doc => {
+							expect(doc).eql(
+								{id: doc.id, lesson: lessonInDb[0].id, start, times: 0, quantity: 0}
+							)
+						})
+				})
+
+				it('删除指定活动阶段功课', () => {
+					return testTarget.deleteLesson(lessonId)
+						.then(() => {
+							return schema.findById(activatyId)
+						})
+						.then(doc => {
+							expect(doc.stages[0].lessons.length).eql(0)
+						})
+				})
+
+				it('删除不存在的功课', () => {
+					return testTarget.deleteLesson(ID_NOT_EXIST)
+						.then(() => {
+							return schema.findById(activatyId)
+						})
+						.then(doc => {
+							expect(doc.stages[0].lessons.length).eql(1)
 						})
 				})
 			})
@@ -125,60 +213,58 @@ describe('LivingForest', () => {
 	})
 	describe('Lessons - 功课', () => {
 		const name = 'foo',
-			code = 'code',
 			desc = 'desc'
 			
 		beforeEach(() => {
 			toCreate = {
-				code, name
+				name
 			};
 			schema = require('../db/schema/Lesson');
 			testTarget = require('../server/biz/Lesson');
 		});
 
-		it('加载 - 字段包括id,code,name,desc,start,times,quantity', () => {
+		it('加载 - 字段包括id,name,desc', () => {
 			start = new Date()
-			return dbSave(schema, {code: 'foo', name: '001', desc: 'desc1oo', start})
+			return dbSave(schema, {name: '001', desc: 'desc1oo'})
 				.then((data) => {
 					return testTarget.findById(data.id)
 				})
 				.then(data => {
-					expect(data).eqls({id: data.id, code: 'foo', name: '001', desc: 'desc1oo', start: start.toJSON(), times: 0, quantity: 0})
+					expect(data).eqls({id: data.id, name: '001', desc: 'desc1oo'})
 				})
 		})
 
 		describe('搜索', () => {
-			it('搜索 - 字段包括code,name,desc', () => {
+			it('搜索 - 字段包括name,desc', () => {
 				data = [
-					{code: 'fee', name: '001'},
-					{code: 'foo', name: '002'},
-					{code: 'fuu', name: 'foo'},
-					{desc: 'desc1oo', code: 'fff', name: '003'}
+					{name: '002'},
+					{name: 'foo'},
+					{desc: 'desc1oo', name: '003'}
 				]
 				return schema.insertMany(data)
 					.then(() => {
 						return testTarget.search({}, 'oo')
 					})
 					.then(data => {
-						expect(data.length).eqls(3)
+						expect(data.length).eqls(2)
 					})
 			})
 	
-			it('搜索 - 字段包括id,code,name,times,quantity', () => {
-				return dbSave(schema, {code: 'foo', name: '001', desc: 'desc1oo'})
+			it('搜索 - 字段包括id,name', () => {
+				return dbSave(schema, {name: '001', desc: 'desc1oo'})
 					.then(() => {
 						return testTarget.search({}, 'oo')
 					})
 					.then(data => {
 						doc = data[0]
-						expect(doc).eqls({id: doc.id, code: 'foo', name: '001', times: 0, quantity: 0})
+						expect(doc).eqls({id: doc.id, name: '001'})
 					})
 			})
 		})
 
 		describe('创建', () => {
 			it('名称非空', () => {
-				return dbSave(schema, {code})
+				return dbSave(schema, {})
 					.should.be.rejectedWith()
 			})
 
@@ -190,52 +276,33 @@ describe('LivingForest', () => {
 					.should.be.rejectedWith()
 			})
 
-			it('编号非空', () => {
-				return dbSave(schema, {name})
-					.should.be.rejectedWith()
-			})
-
-			it('编号必须唯一', () => {
-				return dbSave(schema, toCreate)
-					.then(() => {
-						return testTarget.create({name: 'anothername', code})
-					})
-					.should.be.rejectedWith()
-			})
-
 			it('创建功课', () => {
-				return testTarget.create({...toCreate, desc})
+				return testTarget.create({name, desc})
 					.then(doc => {
 						return schema.findById(doc.id)
 					})
 					.then(doc => {
 						doc = doc.toJSON()
-						expect(doc.code).eql(code)
 						expect(doc.name).eql(name)
 						expect(doc.desc).eql(desc)
-						expect(doc.applies.length).eql(0)
-						expect(doc.start).undefined
-						expect(doc.times).eql(0)
-						expect(doc.quantity).eql(0)
 					})
 			})
 		})
 
-		it('更新 - code name desc are updateable', () => {				
-			return dbSave(schema, {code: 'v1', name: 'v2', desc: 'v3'})
+		it('更新 - name desc are updateable', () => {				
+			return dbSave(schema, {name: 'v2', desc: 'v3'})
 				.then(doc => {
 					id = doc.id
 					__v = doc.__v
-					return testTarget.update({id, __v, code, name, desc})
+					return testTarget.update({id, __v, name, desc})
 				})
 				.then(doc => {
-					expect(doc.code).eql(code)
 					expect(doc.name).eql(name)
 					expect(doc.desc).eql(desc)
 				})
 		})
 
-		describe('报修量', () => {
+		xdescribe('报修量', () => {
 			const quantity = 1000,
 				creator = ID_NOT_EXIST
 

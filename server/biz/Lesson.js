@@ -3,10 +3,10 @@ const schema = require('../../db/schema/Lesson'),
 
 const config = {
 	schema,
-	projection: {applies: 0, createdAt: 0, updatedAt: 0, __v: 0},
-	updatables: ['code', 'name', 'desc'],
-	searchables: ['code', 'name', 'desc'],
-	listable: ['code', 'name', 'start', 'times', 'quantity']
+	projection: ['name', 'desc'],
+	updatables: ['name', 'desc'],
+	searchables: ['name', 'desc'],
+	listable: ['name']
 }
 
 const addIn = {
