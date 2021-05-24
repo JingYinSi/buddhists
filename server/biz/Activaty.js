@@ -3,10 +3,15 @@ const schema = require('../../db/schema/Activaty'),
 
 const config = {
 	schema,
-	projection: ['name'],
+	projection: ['-stages'],
 	updatables: ['name'],
 	searchables: ['name'],
-	listable: ['name']
+	listable: ['name'],
+	/* subdoc: {
+		projection: {
+			stages: ['name']
+		}
+	} */
 }
 
 const addIn = {

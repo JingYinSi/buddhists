@@ -12,7 +12,26 @@ module.exports = {
     },
     Activaty: {
         self: "Activaty",
-        collection: "Activaties"
+        collection: "Activaties",
+        stages: "ActivatyStages"
+    },
+    ActivatyStages: {
+        add: 'ActivatyStages',
+        parent: 'Activaty'
+    },
+    ActivatyStage: {
+        self: "ActivatyStage",
+        collection: "ActivatyStages",
+        stageLessons: "ActivatyStageLessons"
+    },
+    ActivatyStageLessons: {
+        add: 'ActivatyStageLessons',
+        parent: 'ActivatyStage'
+    },
+    ActivatyStageLesson: {
+        self: "ActivatyStageLesson",
+        collection: "ActivatyStageLessons",
+        refLesson: "Lesson"
     },
     Lessons: {
         add: 'Lessons',

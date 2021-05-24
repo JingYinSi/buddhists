@@ -4,32 +4,31 @@
 const {
     ifMatch,
     ifNoneMatch,
-    update,
-    remove,
-    findById
-} = require('../biz/Lesson');
+    updateSubDoc,
+    removeSubDoc,
+    findSubDocById
+} = require('../biz/Activaty');
+
+const subDocPath = 'stages.lessons'
 
 module.exports = {
-    url: '/livingforest/api/lessons/:id',
-    transitions: {
-        ActivatyStageLesson: {id: 'context.lesson'}
-    },
+    url: '/livingforest/api/activaty/stage/lessons/:id',
     rests: [{
             type: 'read',
             ifNoneMatch,
-            handler: findById
+            handler: (id) => findSubDocById(id, subDocPath)
         },
         {
             type: 'update',
             ifMatch,
             handler: (id, data) => {
                 data.id = id
-                return update(data)
+                return updateSubDoc(subDocPath, data)
             }
         },
         {
             type: 'delete',
-            handler: remove
+            handler: (id) => removeSubDoc(id, subDocPath)
         }
     ]
 }
