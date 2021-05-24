@@ -27,6 +27,8 @@ git clone -b dev-stage1 https://github.com/JingYinSi/buddhists.git
 npm install
 restfulstart
 
+// 打开Chrome:
+http://localhost:8090/livingforest/index.html    
 
 
 ```
