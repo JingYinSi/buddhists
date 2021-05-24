@@ -24,7 +24,6 @@ describe('LivingForest', () => {
 		});
 
 		it('加载活动 - 字段包括id,name', () => {
-			start = new Date()
 			return dbSave(schema, {name})
 				.then((data) => {
 					return testTarget.findById(data.id)
@@ -76,12 +75,14 @@ describe('LivingForest', () => {
 		})
 
 		describe('Activaty.Stage - 活动阶段', () => {
-			let activatyId
+			let activatyId, subdocPath, activatyDoc
 			const stage = 'stage'
 			beforeEach(() => {
+				subdocPath = 'stages'
 				return dbSave(schema, {name})
 					.then(doc => {
 						activatyId = doc.id
+						activatyDoc = doc
 					})
 			})
 
@@ -95,7 +96,7 @@ describe('LivingForest', () => {
 					})
 					.then((doc) => {
 						stages = doc.stages
-						return testTarget.listStages(doc.id)
+						return testTarget.listSubs(doc.id, subdocPath)
 					})
 					.then(list => {
 						expect(list).eqls([{id: stages[0].id}, {id: stages[1].id, name: stage}])
@@ -104,21 +105,21 @@ describe('LivingForest', () => {
 
 			describe('新增活动阶段', () => {
 				it('活动不存在', () => {
-					return testTarget.createStage(ID_NOT_EXIST, {})
+					return testTarget.createSubDoc(ID_NOT_EXIST, subdocPath, {})
 						.should.be.rejectedWith()
 				})
 
 				it('创建最简单的活动阶段', () => {
-					return testTarget.createStage(activatyId, {})
+					return testTarget.createSubDoc(activatyId, subdocPath, {})
 						.then(doc => {
-							expect(doc).eql({activaty: activatyId, id: doc.id})
+							expect(doc).eql({id: doc.id})
 						})
 				})
 
 				it('成功创建活动阶段', () => {
-					return testTarget.createStage(activatyId, {name: stage})
+					return testTarget.createSubDoc(activatyId, subdocPath, {name: stage})
 						.then(doc => {
-							expect(doc).eql({activaty: activatyId, id: doc.id, name: stage})
+							expect(doc).eql({id: doc.id, name: stage})
 						})
 				})
 			})
@@ -129,6 +130,7 @@ describe('LivingForest', () => {
 				let lessonInDb, stageId, lessonId
 
 				beforeEach(() => {
+					subdocPath = 'stages.lessons'
 					return lessonSchema.insertMany([{name: 'foo'}, {name: 'fee'}, {name: 'fuu'}])
 						.then(docs => {
 							lessonInDb = docs
@@ -139,6 +141,7 @@ describe('LivingForest', () => {
 							return doc.save()
 						})
 						.then(doc => {
+							activatyDoc = doc.toJSON()
 							stageId = doc.stages[0].id
 							lessonId = doc.stages[0].lessons[0].id
 						})
@@ -147,7 +150,7 @@ describe('LivingForest', () => {
 				it('创建指定活动阶段的功课', () => {
 					lessonRef = lessonInDb[1].id
 					let newLessonId
-					return testTarget.createLesson(stageId, {lesson: lessonRef})
+					return testTarget.createSubDoc(stageId, subdocPath, {lesson: lessonRef})
 						.then(doc => {
 							newLessonId = doc.id
 							return schema.findById(activatyId)
@@ -169,7 +172,7 @@ describe('LivingForest', () => {
 							return doc.save()
 						})
 						.then(() => {
-							return testTarget.listLessons(stageId)
+							return testTarget.listSubs(stageId, subdocPath)
 						})
 						.then(docs => {
 							expect(docs).eql([
@@ -181,16 +184,17 @@ describe('LivingForest', () => {
 				})
 				
 				it('加载指定的活动阶段功课', () => {
-					return testTarget.loadLesson(lessonId)
+					return testTarget.findSubDocById(lessonId, subdocPath)
 						.then(doc => {
 							expect(doc).eql(
-								{id: doc.id, lesson: lessonInDb[0].id, start, times: 0, quantity: 0}
+								{Activaty: activatyId, stages: stageId, id: doc.id, lesson: lessonInDb[0].id,
+									 start, times: 0, quantity: 0, __v: activatyDoc.__v, updatedAt: activatyDoc.updatedAt}
 							)
 						})
 				})
 
 				it('删除指定活动阶段功课', () => {
-					return testTarget.deleteLesson(lessonId)
+					return testTarget.removeSubDoc(lessonId, subdocPath)
 						.then(() => {
 							return schema.findById(activatyId)
 						})
@@ -200,7 +204,7 @@ describe('LivingForest', () => {
 				})
 
 				it('删除不存在的功课', () => {
-					return testTarget.deleteLesson(ID_NOT_EXIST)
+					return testTarget.removeSubDoc(ID_NOT_EXIST, subdocPath)
 						.then(() => {
 							return schema.findById(activatyId)
 						})
