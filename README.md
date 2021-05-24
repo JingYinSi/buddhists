@@ -15,6 +15,23 @@
 
 ```
 ## 系统安装
+
+### Restful方式运行
+安装Mongodb、Nodejs
+
+```
+
+mkdir buddhists         // 创建目录
+cd buddhists            // 当前目录到app目录
+git clone -b dev-stage1 https://github.com/JingYinSi/buddhists.git
+npm install
+restfulstart
+
+
+
+```
+
+
 假设安装目录为: /home/jsmtest/apps
 
 Clone cross：
