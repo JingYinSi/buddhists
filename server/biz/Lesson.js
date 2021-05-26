@@ -10,18 +10,6 @@ const config = {
 }
 
 const addIn = {
-	apply: async (work) => {
-		let lesson = await schema.findById(work.lesson)
-		if (!lesson) throw new Error(`The lesson not exists`)
-		let row = lesson.applies.push(work)
-		if(row == 1) lesson.start = lesson.applies[0].date
-		lesson.quantity += work.quantity
-		lesson.times += 1
-		lesson = await lesson.save()
-
-		lesson = lesson.toJSON()
-		return {lesson: lesson.id, ...lesson.applies[row - 1]}
-	} 
 }
 
 module.exports = createEntity(config, addIn)

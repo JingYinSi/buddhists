@@ -307,88 +307,55 @@ describe('LivingForest', () => {
 					expect(doc.desc).eql(desc)
 				})
 		})
-
-		xdescribe('报修量', () => {
-			const quantity = 1000,
-				creator = ID_NOT_EXIST
-
-			let lessonDoc, lesson, workDoc
-
-			beforeEach(() => {
-				return dbSave(schema, toCreate)
-					.then(doc => {
-						lessonDoc = doc
-						lesson = doc.id
-					})
-			})
-
-			it('功课不存在', async () => {
-				lesson = ID_NOT_EXIST
-				work = {lesson}
-				await expect(testTarget.apply(work)).to.be.rejectedWith()
-			})
-
-			it('申报成功', async () => {
-				work = {lesson, quantity, creator}
-				workDoc1 = await testTarget.apply(work)
-				workDoc2 = await testTarget.apply(work)
-				doc = await schema.findById(lesson)
-				doc = doc.toJSON()
-				expect(doc.start).eql(workDoc1.date)
-				expect(doc.quantity).eql(quantity * 2)
-				expect(doc.applies.length).eql(2)
-				expect(doc.applies[0]).eql({id: workDoc1.id, quantity, creator, date: workDoc1.date})
-				expect(doc.applies[1]).eql({id: workDoc2.id, quantity, creator, date: workDoc2.date})
-			})
-
-
-		})
 	})
 
 	describe('交易', () => {
-		describe('活动阶段', () => {
-			const dbschema = require('../db/schema'),
+		const dbschema = require('../db/schema'),
 			activatyEntity = require('../server/biz/Activaty')
-			let lessonsInDb, activatiesInDb
-			let stageDate
-			beforeEach(() => {
-				stageDate = new Date().toJSON()
-				return dbschema.lessons.insertMany([{name: 'foo'}, {name: 'fee'}, {name: 'fuu'}])
-					.then(docs => {
-						lessonsInDb = map(docs, doc => {
-							return doc.toJSON()
-						})
-						return dbschema.activaties.insertMany([
-							{
-								name: 'activaty1', stages: [
-									{name: 'stage1', lessons: [{lesson: lessonsInDb[0].id}, {lesson: lessonsInDb[1].id}]},
-									{name: 'stage2', lessons: [{lesson: lessonsInDb[1].id}]},
-									{name: 'stage3'}
-								]
-							},
-							{
-								name: 'activaty2', stages: [
-									{name: 'stage1', lessons: [{lesson: lessonsInDb[1].id}]},
-									{name: 'stage2', start: stageDate, lessons: [{lesson: lessonsInDb[0].id}, {lesson: lessonsInDb[1].id}]}
-								]
-							},
-							{
-								name: 'activaty3', stages: [
-									{start: stageDate, lessons: [{lesson: lessonsInDb[1].id}]},
-									{name: 'stage2'}
-								]
-							}
-						])
+		let lessonsInDb, activatiesInDb
+		let stageDate
+
+		beforeEach(() => {
+			stageDate = new Date().toJSON()
+			return clearDB()
+				.then(() => {
+					return dbschema.lessons.insertMany([{name: 'foo'}, {name: 'fee'}, {name: 'fuu'}])
+				})
+				.then(docs => {
+					lessonsInDb = map(docs, doc => {
+						return doc.toJSON()
 					})
+				})
+		})
+
+		describe('活动阶段', () => {
+			beforeEach(() => {
+				return dbschema.activaties.insertMany([
+						{
+							name: 'activaty1', stages: [
+								{name: 'stage1', lessons: [{lesson: lessonsInDb[0].id}, {lesson: lessonsInDb[1].id}]},
+								{name: 'stage2', lessons: [{lesson: lessonsInDb[1].id}]},
+								{name: 'stage3'}
+							]
+						},
+						{
+							name: 'activaty2', stages: [
+								{name: 'stage1', lessons: [{lesson: lessonsInDb[1].id}]},
+								{name: 'stage2', start: stageDate, lessons: [{lesson: lessonsInDb[0].id}, {lesson: lessonsInDb[1].id}]}
+							]
+						},
+						{
+							name: 'activaty3', stages: [
+								{start: stageDate, lessons: [{lesson: lessonsInDb[1].id}]},
+								{name: 'stage2'}
+							]
+						}
+					])
 					.then(docs => {
 						activatiesInDb = map(docs, doc => {
 							return doc.toJSON()
 						})
 					})
-			})
-
-			afterEach(() => {
-				return clearDB()
 			})
 
 			it('列出所有当前正在开展的活动阶段', () => {
@@ -459,20 +426,6 @@ describe('LivingForest', () => {
 			})
 
 			describe('关闭活动', () => {
-				it('指定活动阶段不合法', () => {
-					return activatyEntity.activateStage('abc')
-						.then(doc => {
-							expect(doc).undefined
-						})
-				})
-	
-				it('指定活动阶段不存在', () => {
-					return activatyEntity.activateStage(ID_NOT_EXIST)
-						.then(doc => {
-							expect(doc).undefined
-						})
-				})
-	
 				it('指定活动阶段尚未开展', () => {
 					return activatyEntity.activateStage(activatiesInDb[0].stages[0].id, false)
 						.then(doc => {
@@ -505,6 +458,40 @@ describe('LivingForest', () => {
 						})
 				})
 			})
+		})
+
+		describe('报修量', () => {
+			const quantity = 1000,
+				creator = '5ce79b99da3537277c3f7788'
+			let msgPublish
+
+			beforeEach(() => {
+				msgPublish = sinon.spy()
+				testTarget = require('../server/biz/Apply')(msgPublish)
+				return dbschema.activaties.insertMany([
+						{name: 'activaty1', stages: [
+							{name: 'stage1', start: stageDate, lessons: [{lesson: lessonsInDb[0].id}, {lesson: lessonsInDb[1].id}]},
+							{name: 'stage2'}
+						]}
+					])
+					.then(docs => {
+						activatiesInDb = map(docs, doc => {
+							return doc.toJSON()
+						})
+					})
+			})
+
+			it('申报修量', async () => {
+				return testTarget.apply({date: new Date(), lesson: activatiesInDb[0].stages[0].lessons[0].id, quantity, creator})
+					.then(doc => {
+						assert(msgPublish.withArgs(doc).calledOnce);
+						expect(doc).eql({
+							id: doc.id, date: doc.date, lesson: activatiesInDb[0].stages[0].lessons[0].id, quantity, creator
+						})
+					})
+			})
+
+
 		})
 	})
 })
