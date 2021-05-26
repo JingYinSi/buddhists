@@ -24,12 +24,14 @@ describe('LivingForest', () => {
 		});
 
 		it('加载活动 - 字段包括id,name', () => {
+			let doc
 			return dbSave(schema, {name})
 				.then((data) => {
+					doc = data
 					return testTarget.findById(data.id)
 				})
 				.then(data => {
-					expect(data).eqls({id: data.id, name})
+					expect(data).eqls({id: data.id, name, createdAt: doc.createdAt, updatedAt: doc.updatedAt, __v: doc.__v})
 				})
 		})
 
@@ -340,6 +342,169 @@ describe('LivingForest', () => {
 			})
 
 
+		})
+	})
+
+	describe('交易', () => {
+		describe('活动阶段', () => {
+			const dbschema = require('../db/schema'),
+			activatyEntity = require('../server/biz/Activaty')
+			let lessonsInDb, activatiesInDb
+			let stageDate
+			beforeEach(() => {
+				stageDate = new Date().toJSON()
+				return dbschema.lessons.insertMany([{name: 'foo'}, {name: 'fee'}, {name: 'fuu'}])
+					.then(docs => {
+						lessonsInDb = map(docs, doc => {
+							return doc.toJSON()
+						})
+						return dbschema.activaties.insertMany([
+							{
+								name: 'activaty1', stages: [
+									{name: 'stage1', lessons: [{lesson: lessonsInDb[0].id}, {lesson: lessonsInDb[1].id}]},
+									{name: 'stage2', lessons: [{lesson: lessonsInDb[1].id}]},
+									{name: 'stage3'}
+								]
+							},
+							{
+								name: 'activaty2', stages: [
+									{name: 'stage1', lessons: [{lesson: lessonsInDb[1].id}]},
+									{name: 'stage2', start: stageDate, lessons: [{lesson: lessonsInDb[0].id}, {lesson: lessonsInDb[1].id}]}
+								]
+							},
+							{
+								name: 'activaty3', stages: [
+									{start: stageDate, lessons: [{lesson: lessonsInDb[1].id}]},
+									{name: 'stage2'}
+								]
+							}
+						])
+					})
+					.then(docs => {
+						activatiesInDb = map(docs, doc => {
+							return doc.toJSON()
+						})
+					})
+			})
+
+			afterEach(() => {
+				return clearDB()
+			})
+
+			it('列出所有当前正在开展的活动阶段', () => {
+				return activatyEntity.listCurrentStages()
+					.then(docs => {
+						expect(docs).eql([
+							{activaty: activatiesInDb[1].id, activatyName: 'activaty2', stage: activatiesInDb[1].stages[1].id, stageName: 'stage2'},
+							{activaty: activatiesInDb[2].id, activatyName: 'activaty3', stage: activatiesInDb[2].stages[0].id}
+						])
+					})
+			})
+
+			describe('开展活动', () => {
+				it('指定活动阶段不合法', () => {
+					return activatyEntity.activateStage('abc')
+						.then(doc => {
+							expect(doc).undefined
+						})
+				})
+	
+				it('指定活动阶段不存在', () => {
+					return activatyEntity.activateStage(ID_NOT_EXIST)
+						.then(doc => {
+							expect(doc).undefined
+						})
+				})
+	
+				it('指定活动阶段无任何课程', () => {
+					return activatyEntity.activateStage(activatiesInDb[2].stages[1].id)
+						.then(doc => {
+							expect(doc).undefined
+						})
+				})
+	
+				it('正常开展', () => {
+					return activatyEntity.activateStage(activatiesInDb[0].stages[1].id)
+						.then(doc => {
+							expect(doc).eql({
+								id: activatiesInDb[0].stages[1].id,
+								name: activatiesInDb[0].stages[1].name,
+								start: doc.start
+							})
+						})
+				})
+	
+				it('可以指定活动开展日期', () => {
+					return activatyEntity.activateStage(activatiesInDb[0].stages[1].id, true, stageDate)
+						.then(doc => {
+							expect(doc).eql({
+								id: activatiesInDb[0].stages[1].id,
+								name: activatiesInDb[0].stages[1].name,
+								start: stageDate
+							})
+						})
+				})
+	
+				it('正常开展 - 指定的活动阶段已开展', () => {
+					const antherStart = new Date()
+					return activatyEntity.activateStage(activatiesInDb[1].stages[1].id, antherStart)
+						.then(doc => {
+							expect(doc).eql({
+								id: activatiesInDb[1].stages[1].id,
+								name: activatiesInDb[0].stages[1].name,
+								start: antherStart.toJSON()
+							})
+						})
+				})
+			})
+
+			describe('关闭活动', () => {
+				it('指定活动阶段不合法', () => {
+					return activatyEntity.activateStage('abc')
+						.then(doc => {
+							expect(doc).undefined
+						})
+				})
+	
+				it('指定活动阶段不存在', () => {
+					return activatyEntity.activateStage(ID_NOT_EXIST)
+						.then(doc => {
+							expect(doc).undefined
+						})
+				})
+	
+				it('指定活动阶段尚未开展', () => {
+					return activatyEntity.activateStage(activatiesInDb[0].stages[0].id, false)
+						.then(doc => {
+							expect(doc).undefined
+						})
+				})
+	
+				it('正常关闭活动阶段', () => {
+					return activatyEntity.activateStage(activatiesInDb[1].stages[1].id, false)
+						.then(doc => {
+							expect(doc.end).not.eql(stageDate)
+							expect(doc).eql({
+								id: activatiesInDb[1].stages[1].id,
+								name: 'stage2',
+								start: stageDate,
+								end: doc.end
+							})
+						})
+				})
+	
+				it('可以指定活动关闭日期', () => {
+					return activatyEntity.activateStage(activatiesInDb[1].stages[1].id, false, stageDate)
+						.then(doc => {
+							expect(doc).eql({
+								id: activatiesInDb[1].stages[1].id,
+								name: 'stage2',
+								start: stageDate,
+								end: stageDate
+							})
+						})
+				})
+			})
 		})
 	})
 })

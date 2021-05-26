@@ -13,7 +13,8 @@ const lessonSchema = createSchema({
 const stageSchema = createSchema({
         start: Date,
         name: String,
-        lessons: [lessonSchema]
+        lessons: [lessonSchema],
+        end: Date
     })
 
 const dbModel = createCollection({
