@@ -5,13 +5,18 @@ const {
     ifNoneMatch,
     updateSubDoc,
     removeSubDoc,
-    findSubDocById
-} = require('../biz/Activaty');
+    findSubDocById,
+    activateStage
+} = require('../biz/Activaty'),
+{isUndefined} = require('underscore')
 
 const subDocPath = 'stages'
 
 module.exports = {
     url: '/livingforest/api/activaty/stages/:id',
+    transitions: {
+        ActivatyStageLesson: {id: 'context.stages'}
+    },
     rests: [{
             type: 'read',
             ifNoneMatch,
@@ -28,6 +33,24 @@ module.exports = {
         {
             type: 'delete',
             handler: (id) => removeSubDoc(id, subDocPath)
+        },
+        {
+            type: 'http',
+            method: 'post',
+            handler: (req, res) => {
+                const id = req.params.id
+                let {activate, date} = req.body
+                return activateStage(id, activate, date)
+                    .then(data => {
+                        if (isUndefined(data)) return res.sendStatus(404)
+                        if (data) {
+                            const url = req.originalUrl
+                            res.location(url)
+                            return res.status(200).json(data)
+                        }
+                        return res.sendStatus(403)
+                    })
+            }
         }
     ]
 }

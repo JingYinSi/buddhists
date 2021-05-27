@@ -11,6 +11,10 @@ const {
 
 module.exports = {
     url: '/livingforest/api/activaties/:id',
+    transitions: {
+        ActivatyStageLesson: {id: 'context.Activaty'},
+        ActivatyStage: {id: 'context.Activaty'}
+    },
     rests: [{
             type: 'read',
             ifNoneMatch,

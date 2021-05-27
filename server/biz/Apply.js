@@ -13,10 +13,13 @@ const addIn = {
 module.exports = (msgPublish) => {
 	const entity = createEntity(config, addIn)
 	entity.apply = (work) => {
+		if (!work.quantity) return Promise.resolve()
 		return entity.create(work)
 			.then(doc => {
 				msgPublish(doc)
 				return doc
+			})
+			.catch(e => {
 			})
 	}
 	

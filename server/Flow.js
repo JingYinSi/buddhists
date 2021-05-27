@@ -2,6 +2,8 @@ module.exports = {
     Entry: {
         activaties: 'Activaties',
         lessons: 'Lessons',
+        applies: 'Applies',
+        currentActivatyStages: 'CurrentActivatyStages',
         users: 'Users',
         register: 'RegisterUser',
         currentUser: 'CurrentUser'
@@ -21,8 +23,10 @@ module.exports = {
     },
     ActivatyStage: {
         self: "ActivatyStage",
+        start: "ActivatyStage",
         collection: "ActivatyStages",
-        stageLessons: "ActivatyStageLessons"
+        stageLessons: "ActivatyStageLessons",
+        activaty: "Activaty"
     },
     ActivatyStageLessons: {
         add: 'ActivatyStageLessons',
@@ -31,7 +35,9 @@ module.exports = {
     ActivatyStageLesson: {
         self: "ActivatyStageLesson",
         collection: "ActivatyStageLessons",
-        refLesson: "Lesson"
+        refLesson: "Lesson",
+        stage: "ActivatyStage",
+        activaty: "Activaty"
     },
     Lessons: {
         add: 'Lessons',
@@ -40,6 +46,14 @@ module.exports = {
     Lesson: {
         self: "Lesson",
         collection: "Lessons"
+    },
+    Applies: {
+        add: 'Applies',
+        home: 'Entry'
+    },
+    Apply: {
+        self: "Apply",
+        collection: "Applies"
     },
     Users: {
         add: 'RegisterUser',

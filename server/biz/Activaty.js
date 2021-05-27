@@ -19,9 +19,15 @@ const entity = createEntity(config)
 
 const stageFields = ['id', 'name', 'start', 'end']
 
-const doActivateStage = (stage, date) => {
+const doActivateStage = (activaty, stage, date) => {
+	const anotherStage = find(activaty.stages, s => {
+		if (s == stage) return false
+		return s.start && !s.end
+	})
+	if (anotherStage) return false
 	if (stage.lessons.length < 1) return false
 	stage.start = date
+	stage.end = undefined
 	return true
 }
 
@@ -34,13 +40,13 @@ const doCloseStage = (stage, date) => {
 const addIn = {
 	listCurrentStages: () => {
 		return schema.find({
-			stages:{$elemMatch: {start: {$exists: true}}}
+			stages:{$elemMatch: {start: {$exists: true}, end: {$exists: false}}}
 		})
 		.then(docs => {
 			return map(docs, doc => {
 				doc = doc.toJSON()
 				const stage = find(doc.stages, s => {
-					return s.start
+					return s.start && !s.end
 				})
 				return omit({activaty: doc.id, activatyName: doc.name, stage: stage.id, stageName: stage.name}, (val, key) => {
 					return key == 'stageName' && !val
@@ -59,8 +65,8 @@ const addIn = {
 		.then(activaty => {
 			if (!activaty) return
 			stageDoc = activaty.stages.id(stageId)
-			const success = activate ? doActivateStage(stageDoc, date) : doCloseStage(stageDoc, date)
-			if (!success) return
+			const success = activate ? doActivateStage(activaty, stageDoc, date) : doCloseStage(stageDoc, date)
+			if (!success) return false
 			stageDoc = stageDoc.toJSON()
 			return activaty.save()
 				.then(() => {

@@ -133,21 +133,4 @@ const obj = {
     }
 }
 
-
-/* const search = entity.search
-entity.search = (cond, text, sort) => {
-    let finalCond = {
-        ...cond
-    }
-    if (finalCond.TYPE) {
-        const condType = finalCond.TYPE
-        delete finalCond.TYPE
-        if (types[condType]) finalCond = {
-            ...finalCond,
-            ...types[condType]
-        }
-    }
-    return search(finalCond, text, sort)
-} */
-
 module.exports = extend(entity, obj)

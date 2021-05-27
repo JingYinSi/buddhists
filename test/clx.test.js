@@ -346,7 +346,14 @@ describe('LivingForest', () => {
 						},
 						{
 							name: 'activaty3', stages: [
+								{start: stageDate, end: new Date().toJSON(), lessons: [{lesson: lessonsInDb[1].id}]},
+								{name: 'stage2'}
+							]
+						},
+						{
+							name: 'activaty4', stages: [
 								{start: stageDate, lessons: [{lesson: lessonsInDb[1].id}]},
+								{start: stageDate, end: new Date().toJSON(), lessons: [{lesson: lessonsInDb[1].id}]},
 								{name: 'stage2'}
 							]
 						}
@@ -363,7 +370,7 @@ describe('LivingForest', () => {
 					.then(docs => {
 						expect(docs).eql([
 							{activaty: activatiesInDb[1].id, activatyName: 'activaty2', stage: activatiesInDb[1].stages[1].id, stageName: 'stage2'},
-							{activaty: activatiesInDb[2].id, activatyName: 'activaty3', stage: activatiesInDb[2].stages[0].id}
+							{activaty: activatiesInDb[3].id, activatyName: 'activaty4', stage: activatiesInDb[3].stages[0].id}
 						])
 					})
 			})
@@ -386,7 +393,7 @@ describe('LivingForest', () => {
 				it('指定活动阶段无任何课程', () => {
 					return activatyEntity.activateStage(activatiesInDb[2].stages[1].id)
 						.then(doc => {
-							expect(doc).undefined
+							expect(doc).false
 						})
 				})
 	
@@ -413,14 +420,33 @@ describe('LivingForest', () => {
 				})
 	
 				it('正常开展 - 指定的活动阶段已开展', () => {
-					const antherStart = new Date()
-					return activatyEntity.activateStage(activatiesInDb[1].stages[1].id, antherStart)
+					const anotherStart = new Date()
+					return activatyEntity.activateStage(activatiesInDb[1].stages[1].id, true, anotherStart)
 						.then(doc => {
 							expect(doc).eql({
 								id: activatiesInDb[1].stages[1].id,
 								name: activatiesInDb[0].stages[1].name,
+								start: anotherStart.toJSON()
+							})
+						})
+				})
+
+				it('重新开展已结束的活动阶段', () => {
+					const antherStart = new Date()
+					return activatyEntity.activateStage(activatiesInDb[2].stages[0].id, true, antherStart)
+						.then(doc => {
+							expect(doc).eql({
+								id: activatiesInDb[2].stages[0].id,
 								start: antherStart.toJSON()
 							})
+						})
+				})
+
+				it('重新开展已结束的活动阶段, 但因本活动已有阶段正在开展， 故拒绝', () => {
+					const antherStart = new Date()
+					return activatyEntity.activateStage(activatiesInDb[3].stages[1].id)
+						.then(doc => {
+							expect(doc).false
 						})
 				})
 			})
@@ -469,7 +495,7 @@ describe('LivingForest', () => {
 				it('指定活动阶段尚未开展', () => {
 					return activatyEntity.activateStage(activatiesInDb[0].stages[0].id, false)
 						.then(doc => {
-							expect(doc).undefined
+							expect(doc).false
 						})
 				})
 	
@@ -501,11 +527,12 @@ describe('LivingForest', () => {
 		})
 
 		describe('报修量', () => {
-			const quantity = 1000,
-				creator = '5ce79b99da3537277c3f7788'
-			let msgPublish
+			const date = new Date().toJSON()
+			let msgPublish, quantity, lesson, creator
 
 			beforeEach(() => {
+				quantity = 1000
+				creator = '5ce79b99da3537277c3f7788'
 				msgPublish = sinon.spy()
 				testTarget = require('../server/biz/Apply')(msgPublish)
 				return dbschema.activaties.insertMany([
@@ -518,16 +545,93 @@ describe('LivingForest', () => {
 						activatiesInDb = map(docs, doc => {
 							return doc.toJSON()
 						})
+						lesson = docs[0].stages[0].lessons[0].id
+					})
+			})
+
+			it('课程非法', async () => {
+				lesson = 'abc'
+				return testTarget.apply({date, lesson, quantity, creator})
+					.then(doc => {
+						expect(doc).undefined
+						assert(msgPublish.notCalled)
+						return dbschema.applies.count()
+							.then(data => {
+								expect(data).eql(0)
+							})
+					})
+			})
+
+			it('申报人非法', async () => {
+				creator = 'abc'
+				return testTarget.apply({date, lesson, quantity, creator})
+					.then(doc => {
+						expect(doc).undefined
+						assert(msgPublish.notCalled)
+						return dbschema.applies.count()
+							.then(data => {
+								expect(data).eql(0)
+							})
+					})
+			})
+
+			it('未报数量则被忽略', async () => {
+				return testTarget.apply({date, lesson: activatiesInDb[0].stages[0].lessons[0].id, creator})
+					.then(doc => {
+						expect(doc).undefined
+						assert(msgPublish.notCalled)
+						return dbschema.applies.count()
+							.then(data => {
+								expect(data).eql(0)
+							})
+					})
+			})
+
+			it('数量为0则被忽略', async () => {
+				quantity = 0
+				return testTarget.apply({date, lesson: activatiesInDb[0].stages[0].lessons[0].id, quantity, creator})
+					.then(doc => {
+						expect(doc).undefined
+						assert(msgPublish.notCalled)
+						return dbschema.applies.count()
+							.then(data => {
+								expect(data).eql(0)
+							})
+					})
+			})
+
+			it('未指定申报人则被忽略', async () => {
+				quantity = 0
+				return testTarget.apply({date, lesson: activatiesInDb[0].stages[0].lessons[0].id, quantity})
+					.then(doc => {
+						expect(doc).undefined
+						assert(msgPublish.notCalled)
+						return dbschema.applies.count()
+							.then(data => {
+								expect(data).eql(0)
+							})
+					})
+			})
+
+			it('可缺省日期', async () => {
+				return testTarget.apply({lesson: activatiesInDb[0].stages[0].lessons[0].id, quantity, creator})
+					.then(doc => {
+						const expectedDoc = {
+							id: doc.id, date: doc.date, lesson: activatiesInDb[0].stages[0].lessons[0].id, quantity, creator
+						}
+						expect(doc).eql(expectedDoc)
+						assert(msgPublish.withArgs(expectedDoc).calledOnce);
 					})
 			})
 
 			it('申报修量', async () => {
-				return testTarget.apply({date: new Date(), lesson: activatiesInDb[0].stages[0].lessons[0].id, quantity, creator})
+				return testTarget.apply({date, lesson: activatiesInDb[0].stages[0].lessons[0].id, quantity, creator})
 					.then(doc => {
-						assert(msgPublish.withArgs(doc).calledOnce);
-						expect(doc).eql({
-							id: doc.id, date: doc.date, lesson: activatiesInDb[0].stages[0].lessons[0].id, quantity, creator
-						})
+						const expectedDoc = {
+							id: doc.id, date, lesson: activatiesInDb[0].stages[0].lessons[0].id, quantity, creator
+						}
+						expect(doc).eql(expectedDoc)
+						assert(msgPublish.withArgs(expectedDoc).calledOnce);
 					})
 			})
 
