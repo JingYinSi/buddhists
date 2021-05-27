@@ -1,6 +1,7 @@
 const schema = require('../../../db/schema/bas/Employee'),
     createEntity = require('@finelets/hyper-rest/db/mongoDb/DbEntity'),
-    mqPublish = require('@finelets/hyper-rest/mq')
+    mqPublish = require('@finelets/hyper-rest/mq'),
+    {extend} = require('underscore')
 
 const config = {
     schema,
@@ -15,6 +16,36 @@ const config = {
         } */
     }
 }
+
+const types = {
+    ALL: {},
+    NONUSER: {
+        inUse: {
+            $ne: true
+        },
+        isAdmin: {
+            $ne: true
+        }
+    },
+    ALLUSER: {
+        $or: [{
+            inUse: true
+        }, {
+            isAdmin: true
+        }]
+    },
+    ADMIN: {
+        isAdmin: true
+    },
+    NONADMINUSER: {
+        inUse: true,
+        isAdmin: {
+            $ne: true
+        }
+    },
+}
+
+const entity = createEntity(config)
 
 const obj = {
     authenticate: (userName, password) => {
@@ -85,39 +116,25 @@ const obj = {
                     mqPublish['removePic'](oldPic)
                 }
             })
+    },
+    searchUsers: (cond, text, sort) => {
+        let finalCond = {
+            ...cond
+        }
+        if (finalCond.TYPE) {
+            const condType = finalCond.TYPE
+            delete finalCond.TYPE
+            if (types[condType]) finalCond = {
+                ...finalCond,
+                ...types[condType]
+            }
+        }
+        return entity.search(finalCond, text, sort)
     }
 }
 
-const types = {
-    ALL: {},
-    NONUSER: {
-        inUse: {
-            $ne: true
-        },
-        isAdmin: {
-            $ne: true
-        }
-    },
-    ALLUSER: {
-        $or: [{
-            inUse: true
-        }, {
-            isAdmin: true
-        }]
-    },
-    ADMIN: {
-        isAdmin: true
-    },
-    NONADMINUSER: {
-        inUse: true,
-        isAdmin: {
-            $ne: true
-        }
-    },
-}
 
-const entity = createEntity(config, obj)
-const search = entity.search
+/* const search = entity.search
 entity.search = (cond, text, sort) => {
     let finalCond = {
         ...cond
@@ -131,6 +148,6 @@ entity.search = (cond, text, sort) => {
         }
     }
     return search(finalCond, text, sort)
-}
+} */
 
-module.exports = entity
+module.exports = extend(entity, obj)

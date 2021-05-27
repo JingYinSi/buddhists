@@ -425,6 +425,46 @@ describe('LivingForest', () => {
 				})
 			})
 
+			describe('处理修量', () => {
+				const id ='5ce79b99da3537277c3f9988',
+					date = new Date().toJSON(),
+					quantity = 1000,
+					creator = '5ce79b99da3537277c3f9923'
+					
+				let work, lesson
+
+				beforeEach(() => {
+					lesson = activatiesInDb[0].stages[0].lessons[1].id
+					work = {id, date, lesson, quantity, creator}
+				})
+
+				it('正确处理', () => {
+					return activatyEntity.withApply(work)   // The first time
+						.then(data => {
+							expect(data).true
+							return dbschema.activaties.findById(activatiesInDb[0].id)
+						})
+						.then(doc => {
+							doc = doc.toJSON()
+							expect(doc.stages[0].lessons[1]).eql({...doc.stages[0].lessons[1], 
+								start: date, quantity, times: 1})
+
+							// withApply for 2th time
+							const anotherDate = new Date().toJSON()
+							return activatyEntity.withApply({...work, date: anotherDate})
+						})
+						.then(data => {
+							expect(data).true
+							return dbschema.activaties.findById(activatiesInDb[0].id)
+						})
+						.then(doc => {
+							doc = doc.toJSON()
+							expect(doc.stages[0].lessons[1]).eql({...doc.stages[0].lessons[1], 
+								start: date, quantity: 2000, times: 2})
+						})
+				})
+			})
+
 			describe('关闭活动', () => {
 				it('指定活动阶段尚未开展', () => {
 					return activatyEntity.activateStage(activatiesInDb[0].stages[0].id, false)

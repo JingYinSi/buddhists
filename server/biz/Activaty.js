@@ -1,6 +1,6 @@
 const schema = require('../../db/schema/Activaty'),
 	createEntity = require('@finelets/hyper-rest/db/mongoDb/DbEntity'),
-	{map, find, pick, omit} = require('underscore')
+	{map, find, pick, omit, extend} = require('underscore')
 
 const config = {
 	schema,
@@ -14,6 +14,8 @@ const config = {
 		}
 	} */
 }
+
+const entity = createEntity(config)
 
 const stageFields = ['id', 'name', 'start', 'end']
 
@@ -67,7 +69,27 @@ const addIn = {
 		})
 		.catch((e) => {
 		})
+	},
+
+	withApply: (work) => {
+		let activaty, stage, lesson
+		return entity.findBySubDocId(work.lesson, 'stages.lessons')
+			.then(doc => {
+				activaty = doc
+				stage = find(doc.stages, s => {
+					lesson = s.lessons.id(work.lesson)
+					return lesson
+				})
+				lesson.start = lesson.start || work.date
+				lesson.quantity += work.quantity
+				lesson.times += 1
+				return activaty.save() 
+			})
+			.then(() => {
+				return true
+			})
 	}
 }
 
-module.exports = createEntity(config, addIn)
+
+module.exports = extend(entity, addIn)

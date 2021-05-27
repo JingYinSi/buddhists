@@ -206,7 +206,7 @@ describe('权限管理', function () {
 			it('所有 - ALL', () => {
 				return save
 					.then(() => {
-						return entity.search({TYPE: 'ALL'})
+						return entity.searchUsers({TYPE: 'ALL'})
 					})
 					.then((users) => {
 						expect(users.length).eql(5)
@@ -216,7 +216,7 @@ describe('权限管理', function () {
 			it('非用户 - NONUSER', () => {
 				return save
 					.then(() => {
-						return entity.search({TYPE: 'NONUSER'})
+						return entity.searchUsers({TYPE: 'NONUSER'})
 					})
 					.then((users) => {
 						expect(users.length).eql(3)
@@ -226,7 +226,7 @@ describe('权限管理', function () {
 			it('用户 - ALLUSER', () => {
 				return save
 					.then(() => {
-						return entity.search({TYPE: 'ALLUSER'})
+						return entity.searchUsers({TYPE: 'ALLUSER'})
 					})
 					.then((users) => {
 						expect(users.length).eql(2)
@@ -236,7 +236,7 @@ describe('权限管理', function () {
 			it('系统管理员 - ADMIN', () => {
 				return save
 					.then(() => {
-						return entity.search({TYPE: 'ADMIN'})
+						return entity.searchUsers({TYPE: 'ADMIN'})
 					})
 					.then((users) => {
 						expect(users.length).eql(1)
@@ -246,7 +246,7 @@ describe('权限管理', function () {
 			it('非系统管理员用户 - NONADMINUSER', () => {
 				return save
 					.then(() => {
-						return entity.search({TYPE: 'NONADMINUSER'})
+						return entity.searchUsers({TYPE: 'NONADMINUSER'})
 					})
 					.then((users) => {
 						expect(users.length).eql(1)
