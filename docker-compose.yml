@@ -1,35 +1,28 @@
 version: "3"
 services:
-  jsm_rabbitmq:
-    container_name: jsm_rabbitmq
+  bigcity_rabbitmq:
+    container_name: bigcity_rabbitmq
     image: "rabbitmq:management"
     environment:
       - RABBITMQ_DEFAULT_USER=jsm
       - RABBITMQ_DEFAULT_PASS=jsm
     ports:
-      - "5672:5672"
-      - "15672:15672"
-  jsm_mongodb:
-    container_name: jsm_mongodb
+      - ":5672"
+      - ":15672"
+  bigcity_mongodb:
+    container_name: bigcity_mongodb
     image: mongo
     volumes:
       - /home/mongo/data:/data/db
       - /home/mongo/backups:/backups
     ports:
-      - "27017:27017"
-  jsm_cross:
-    container_name: jsm_cross
+      - ":27017"
+  bigcity_server:
+    container_name: bigcity_server
     restart: on-failure
     build: .
     ports:
       - "9510:9510"
     links:
-      - jsm_mongodb:crossdb
-      - jsm_rabbitmq:rabbitmq
-  jsm_nginx:
-    build: ./VCross
-    container_name: jsm_nginx
-    links:
-        - jsm_cross:cross
-    ports:
-        - "80:80"
+      - bigcity_mongodb:livingforestdb
+      - bigcity_rabbitmq:rabbitmq
