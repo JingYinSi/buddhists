@@ -10,14 +10,14 @@ WORKDIR /app
 ADD . /app
 
 ENV RUNNING_MODE=rest
-ENV PORT=9510
-ENV MONGODB=mongodb://livingforestdb:27017/livingforest
+ENV PORT=9590
+ENV MONGODB=mongodb://livingforestdb:28517/livingforest
 ENV CLIENT_ORIGIN=http://192.168.5.166/jsmetta
 ENV MQ=amqp://jsm:jsm@rabbitmq
 ENV JWT_SECRET=MFswDQYJKoZIhvcNAQEBBQADSgAwRwJAamUL/pm3t5EZ
 
 # Expose port
-EXPOSE  9510
+EXPOSE  9590
 
 # Run app using nodemon
 CMD ["node", "/app/server.js"]
