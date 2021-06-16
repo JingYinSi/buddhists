@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:14.17.1
 
 # Provides cached layer for node_modules
 ADD package.json /tmp/package.json
