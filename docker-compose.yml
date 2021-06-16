@@ -13,8 +13,8 @@ services:
     container_name: bigcity_mongodb
     image: mongo
     volumes:
-      - /home/mongo/data/bigcity:/data/db
-      - /home/mongo/backups/bigcity:/backups
+      - /home/mongo/bigcity/data:/data/db
+      - /home/mongo/bigcity/backups:/backups
     ports:
       - "28517"
   bigcity_server:
