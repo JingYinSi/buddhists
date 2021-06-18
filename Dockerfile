@@ -1,4 +1,4 @@
-FROM node:14.17.1
+FROM node:latest
 
 # Provides cached layer for node_modules
 ADD package.json /tmp/package.json
@@ -10,14 +10,13 @@ WORKDIR /app
 ADD . /app
 
 ENV RUNNING_MODE=rest
-ENV PORT=9590
-ENV MONGODB=mongodb://livingforestdb:28517/livingforest
-ENV CLIENT_ORIGIN=http://192.168.5.166/jsmetta
-ENV MQ=amqp://jsm:jsm@rabbitmq
+ENV PORT=9550
+ENV MONGODB=mongodb://livingforestdb:27017/livingforest
+ENV MQ=amqp://jsm:jsm@livingforestmq
 ENV JWT_SECRET=MFswDQYJKoZIhvcNAQEBBQADSgAwRwJAamUL/pm3t5EZ
 
 # Expose port
-EXPOSE  9590
+EXPOSE  9550
 
 # Run app using nodemon
 CMD ["node", "/app/server.js"]
