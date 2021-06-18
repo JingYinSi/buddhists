@@ -7,8 +7,8 @@ services:
       - RABBITMQ_DEFAULT_USER=jsm
       - RABBITMQ_DEFAULT_PASS=jsm
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "5672"
+      - "15672"
   bigcity_mongodb:
     container_name: bigcity_mongodb
     image: mongo
@@ -16,13 +16,27 @@ services:
       - /home/mongo/bigcity/data:/data/db
       - /home/mongo/bigcity/backups:/backups
     ports:
-      - "27017:27017"
+      - "28517:27017"
   bigcity_server:
     container_name: bigcity_server
-    restart: on-failure
-    build: .
+    image: "node:16"
+    environment:
+      - RUNNING_MODE=rest
+      - PORT=9550
+      - MONGODB=mongodb://livingforestdb:27017/livingforest
+      - MQ=amqp://jsm:jsm@livingforestmq
+      - JWT_SECRET=MFswDQYJKoZIhvcNAQEBBQADSgAwRwJAamUL/pm3t5EZ
+    entrypoint:
+      - "sh"
+      - "-c"
+      - "npm install && node server.js"
+    working_dir: "/usr/app/livingforest"
     ports:
       - "9550:9550"
+    volumes:
+      - ".:/usr/app/livingforest"
+      # Don't sync the node_modules directory back to the client.
+      - "/usr/app/livingforest/node_modules"
     links:
       - bigcity_mongodb:livingforestdb
       - bigcity_rabbitmq:livingforestmq
