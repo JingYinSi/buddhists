@@ -22,6 +22,7 @@ services:
     image: "node:16"
     environment:
       - RUNNING_MODE=rest
+      - HTTPS=true
       - PORT=9550
       - MONGODB=mongodb://livingforestdb:27017/livingforest
       - MQ=amqp://jsm:jsm@livingforestmq
