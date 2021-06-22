@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/JSMetta/cross#readme",
   "dependencies": {
-    "@finelets/hyper-rest": "^3.3.2"
+    "@finelets/hyper-rest": "^3.3.3"
   },
   "devDependencies": {
     "chai": "^4.3.4",

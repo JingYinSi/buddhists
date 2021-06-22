@@ -11,10 +11,6 @@ describe('LivingForest', () => {
 		return clearDB();
 	});
 
-	afterEach(function () {
-		return clearDB();
-	});
-
 	describe('Activaties - 活动', () => {
 		const name = 'foo'
 			
