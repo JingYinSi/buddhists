@@ -33,7 +33,7 @@ services:
       - "npm install && node server.js"
     working_dir: "/usr/app/livingforest"
     ports:
-      - "9550:9550"
+      - "443:9550"
     volumes:
       - ".:/usr/app/livingforest"
       # Don't sync the node_modules directory back to the client.
