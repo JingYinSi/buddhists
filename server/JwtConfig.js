@@ -1,4 +1,4 @@
-logger = require('../app/Logger'),
+logger = require('@finelets/hyper-rest/app/Logger'),
 axios = require('axios');
 
 const employeeEntity = require('./biz').Employee,
