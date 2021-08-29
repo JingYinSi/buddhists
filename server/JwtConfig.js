@@ -21,7 +21,7 @@ let __authenticate, __getUser, __haveAdmin
 let __wx_session_key
 const config = {
     authenticate: (username, password) => {
-        let {code, username} = username
+        let {code} = username
         if (!code) {
             logger.error("We havent received the code from client")
             return Promise.resolve();
