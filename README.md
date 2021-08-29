@@ -99,3 +99,11 @@ shudo crontab -e
 * Promise.resolve(false) - 拒绝消息，重新进入消息列表
 * Promise.reject(err) - 拒绝消息，消息将被废弃
 
+
+#### How to: Allow Node to bind to port 80 without sudo
+Only do this if you understand the consequences: all node programs will be able to bind on ports < 1024
+
+sudo setcap 'cap_net_bind_service=+ep' /usr/local/bin/node
+Important: your node location may vary. Use which node to find it, or use it directly in the command:
+
+sudo setcap 'cap_net_bind_service=+ep' `which node`

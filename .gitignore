@@ -8,3 +8,4 @@ test/data/
 *.env
 *.pem
 .cert/
+package-lock.json

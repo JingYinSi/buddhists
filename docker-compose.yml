@@ -27,6 +27,8 @@ services:
       - MONGODB=mongodb://livingforestdb:27017/livingforest
       - MQ=amqp://jsm:jsm@livingforestmq
       - JWT_SECRET=MFswDQYJKoZIhvcNAQEBBQADSgAwRwJAamUL/pm3t5EZ
+      - AppId=wxc6f15800d186154e
+      - AppSecret=593222138835dae2bbd53d83b7bad6b5
     entrypoint:
       - "sh"
       - "-c"

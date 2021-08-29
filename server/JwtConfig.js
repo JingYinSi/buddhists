@@ -1,3 +1,6 @@
+logger = require('../app/Logger'),
+axios = require('axios');
+
 const employeeEntity = require('./biz').Employee,
     DEFAULT_ADMIN_ID = '$$$$livingforest$$admin',
     DEFAULT_ADMIN_NAME = '@admin@',
@@ -15,22 +18,24 @@ const baseUrl = '/livingforest/api',
     loginUrl = '/livingforest/auth/login'
 
 let __authenticate, __getUser, __haveAdmin
+let __wx_session_key
 const config = {
     authenticate: (username, password) => {
-        if (username === DEFAULT_ADMIN_NAME && password === DEFAULT_ADMIN_PWD) {
-            if (!__haveAdmin) return Promise.resolve(DEFAULT_ADMIN)
-
-            return __haveAdmin()
-                .then((countOfAdmin) => {
-                    if (countOfAdmin < 1) return Promise.resolve(DEFAULT_ADMIN)
-                    return Promise.resolve()
-                })
+        let {code, username} = username
+        if (!code) {
+            logger.error("We havent received the code from client")
+            return Promise.resolve();
         }
-        return __authenticate(username, password)
+        let url = `https://api.weixin.qq.com/sns/jscode2session?appid=${process.env.AppId}&secret=${process.env.AppSecret}&js_code=${code}&grant_type=authorization_code`
+        return axios.get(url)
+            .then(res => {
+                logger.debug("login to wx by code: " + JSON.stringify(res.data, null, 2))
+                __wx_session_key = res.data.session_key
+                return {id: res.data.openid}
+            })
     },
     getUser: (id) => {
-        if (id === DEFAULT_ADMIN_ID) return Promise.resolve({isAdmin: true})
-        return __getUser(id)
+        return Promise.resolve({id})
     },
     baseUrl,
     loginUrl
