@@ -14,8 +14,8 @@ let config = {
 
 if (process.env.HTTPS) {
 	const cert = {
-		key: fs.readFileSync("./.cert/mygdh.key"),
-		cert: fs.readFileSync("./.cert/mygdh.cert")
+		key: fs.readFileSync("./.cert/privkey.pem"),
+		cert: fs.readFileSync("./.cert/fullchain.pem")
 	}
 	config = {...config, cert}
 }
