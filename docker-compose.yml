@@ -32,9 +32,11 @@ services:
     ports:
       - "443:9550"
       - "80:9550"
+    working_dir: "/app"
     volumes:
-      - ".:${INSTALL_PATH}/app/src/mydh/buddhists"
-      - "${INSTALL_PATH}/app/src/mydh/buddhists/node_modules"
+      - "${INSTALL_PATH}/app/src/mydh/buddhists:/app"
+      - "${INSTALL_PATH}/cert/.acme.sh/mygdh.top_ecc/mygdh.top.key:/app/.cert/privkey.pem:ro"
+      - "${INSTALL_PATH}/cert/.acme.sh/mygdh.top_ecc/fullchain.cer:/app/.cert/fullchain.pem:ro"
     depends_on:
       - rabbitmq
       - mongodb
