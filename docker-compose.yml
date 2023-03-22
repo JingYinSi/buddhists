@@ -1,44 +1,60 @@
 version: "3"
 services:
-  bigcity_rabbitmq:
-    container_name: bigcity_rabbitmq
-    image: "rabbitmq:management"
-    environment:
-      - RABBITMQ_DEFAULT_USER=jsm
-      - RABBITMQ_DEFAULT_PASS=jsm
+  web_server:
+    container_name: web_server
+    image: "nginx:alpine"
     ports:
-      - "5672"
-      - "15672"
-  bigcity_mongodb:
-    container_name: bigcity_mongodb
-    image: mongo
+      - "8080:80"
     volumes:
-      - /home/mongo/bigcity/data:/data/db
-      - /home/mongo/bigcity/backups:/backups
-    ports:
-      - "28517:27017"
-  bigcity_server:
-    container_name: bigcity_server
+      - "${INSTALL_PATH}/web/src/mydh/html:/usr/share/nginx/html:ro"
+      # - "${INSTALL_PATH}/web/conf/nginx.conf:/etc/nginx/nginx.conf:ro"
+    depends_on:
+      - app_server
+  app_server:
+    container_name: app_server
     image: "node:16"
     environment:
+      - RUNNING_MODE=rest
       - HTTPS=true
       - PORT=9550
-      - MONGODB=mongodb://livingforestdb:27017/livingforest
-      - MQ=amqp://jsm:jsm@livingforestmq
-      - JWT_SECRET=MFswDQYJKoZIhvcNAQEBBQADSgAwRwJAamUL/pm3t5EZ
-      - AppId=wxc6f15800d186154e
-      - AppSecret=593222138835dae2bbd53d83b7bad6b5
+      - MONGODB=mongodb://mydhdb:27017/mydh
+      - MQ=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@mydhmq
+      - AppId=${WECHAT_APP_ID}
+      - AppSecret=${WECHAT_APP_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
+      - SessionExpiresIn=${SESSION_EXPIRES_IN}
+      - CERT_PRI_KEY_PATH:${INSTALL_PATH}/cert/.acme.sh/mygdh.top_ecc/mygdh.top.key
+      - CERT_FULL_CHAIN_PATH:${INSTALL_PATH}/cert/.acme.sh/mygdh.top_ecc/fullchain.cer
     entrypoint:
       - "sh"
       - "-c"
       - "npm install && node server.js"
-    working_dir: "/usr/app/livingforest"
     ports:
       - "443:9550"
+      - "80:9550"
     volumes:
-      - ".:/usr/app/livingforest"
-      # Don't sync the node_modules directory back to the client.
-      - "/usr/app/livingforest/node_modules"
+      - ".:${INSTALL_PATH}/app/src/mydh/buddhists"
+      - "${INSTALL_PATH}/app/src/mydh/buddhists/node_modules"
+    depends_on:
+      - rabbitmq
+      - mongodb
     links:
-      - bigcity_mongodb:livingforestdb
-      - bigcity_rabbitmq:livingforestmq
+      - mongodb:mydhdb
+      - rabbitmq:mydhmq
+  rabbitmq:
+    container_name: "rabbitmq"
+    image: "rabbitmq:3-management-alpine"
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    ports:
+      - "5672"
+      - "15672"
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    volumes:
+      - ${INSTALL_PATH}/db/mongo/data/mydh:/data/db
+      - ${INSTALL_PATH}/db/mongo/backup/mydh:/backups
+    ports:
+      - "28517:27017"
