@@ -1,4 +1,7 @@
-const entity = require('../biz').Apply
+/**
+ *  推荐
+ */
+const entity = require('../biz/mygdh/Recommend');
 
 const list = function (query) {
     let condi
@@ -7,7 +10,9 @@ const list = function (query) {
     } catch (e) {
         condi = {}
     }
-    return entity.search(condi)
+    let text = query.s ? query.s : '.'
+    text = text.length > 0 ? text : '.'
+    return entity.search(condi, text)
         .then(function (list) {
             return {
                 items: list
@@ -16,17 +21,17 @@ const list = function (query) {
 };
 
 module.exports = {
-    url: '/livingforest/api/applies',
+    url: '/livingforest/api/recommends',
     rests: [{
             type: 'create',
-            target: 'Apply',
+            target: 'Recommend',
             handler: (req) => {
-                return entity.apply(req.body)
+                return entity.create(req.body)
             }
         },
         {
             type: 'query',
-            element: 'Apply',
+            element: 'Recommend',
             handler: list
         }
     ]

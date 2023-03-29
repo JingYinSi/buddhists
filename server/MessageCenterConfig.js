@@ -1,6 +1,5 @@
 const logger = require('@finelets/hyper-rest/app/Logger'),
-    {Employee, PicGridFs} = require('./biz'),
-    {withApply} = require('./biz/Activaty')
+    {Employee, PicGridFs} = require('./biz')
 
 module.exports = {
     connect: process.env.MQ,
@@ -40,13 +39,6 @@ module.exports = {
                             .catch(e => {
                                 return true
                             })
-                    }
-                },
-                Apply: {
-                    topic: 'apply',
-                    consumer: (msg) => {
-                        logger.debug(`handle apply message: ${JSON.stringify(msg, null, 2)}`)
-                        return withApply(msg)
                     }
                 }
             }

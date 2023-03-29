@@ -1,12 +1,14 @@
 const fs = require("fs"),
 	createServer = require("@finelets/hyper-rest/express/CreateWxServer"),
 	messageCenterConfig = require("./server/MessageCenterConfig"),
+	jwtConfig = require("./server/JwtConfig")(),
 	flow = require("./server/Flow");
 
 let config = {
 	appName: "livingforest",
 	baseDir: __dirname,
 	messageCenterConfig,
+	jwtConfig,
 	flow,
 };
 

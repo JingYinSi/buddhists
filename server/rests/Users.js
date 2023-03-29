@@ -19,7 +19,13 @@ const list = function (query) {
 
 module.exports = {
     url: '/livingforest/api/auth/users',
-    rests: [
+    rests: [{
+        type: 'create',
+        target: 'User',
+        handler: (req) => {
+            return entity.create(req.body)
+        }
+    },
         {
             type: 'query',
             element: 'User',

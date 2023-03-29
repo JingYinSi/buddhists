@@ -3,17 +3,16 @@ const mongoose = require('mongoose'),
     ObjectId = mongoose.Schema.Types.ObjectId;
 
 const dbModel = createCollection({
-    name: 'Apply',
+    name: 'Report',
     schema: {
-        date: {type: Date, default: Date.now },
-        lesson: {type: ObjectId, required: true},
-        quantity: {type: Number, default: 0},
-        creator: {type: ObjectId, required: true}
+        user: {type: String, required: true},
+        lessonIns: {type: String, required: true},
+        times: {type: Number, default: 0},
+        reportDate: Date
     },
     indexes: [{
         index: {
-            lesson: 1,
-            creator: 1
+            user: 1
         }
     }]
 })

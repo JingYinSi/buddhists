@@ -1,4 +1,7 @@
-const entity = require('../biz/Activaty');
+/**
+ *  报数
+ */
+const entity = require('../biz/mygdh/Report');
 
 const list = function (query) {
     let condi
@@ -18,17 +21,17 @@ const list = function (query) {
 };
 
 module.exports = {
-    url: '/livingforest/api/activaties',
+    url: '/livingforest/api/reports',
     rests: [{
             type: 'create',
-            target: 'Activaty',
+            target: 'Report',
             handler: (req) => {
                 return entity.create(req.body)
             }
         },
         {
             type: 'query',
-            element: 'Activaty',
+            element: 'Report',
             handler: list
         }
     ]

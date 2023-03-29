@@ -1,5 +1,5 @@
 module.exports = {
-    activaties: require('./Activaty'),
-    lessons: require('./Lesson'),
-    applies: require('./Apply')
+    lessons: require('./mygdh/Lesson'),
+    recommends: require('./mygdh/Recommend'),
+    reports: require('./mygdh/Report')
 }

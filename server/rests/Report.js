@@ -1,5 +1,5 @@
 /**
- * Created by clx on 2017/10/13.
+ *  报数
  */
 const {
     ifMatch,
@@ -7,14 +7,10 @@ const {
     update,
     remove,
     findById
-} = require('../biz/Activaty');
+} = require('../biz/mygdh/Report');
 
 module.exports = {
-    url: '/livingforest/api/activaties/:id',
-    transitions: {
-        ActivatyStageLesson: {id: 'context.Activaty'},
-        ActivatyStage: {id: 'context.Activaty'}
-    },
+    url: '/livingforest/api/reports/:id',
     rests: [{
             type: 'read',
             ifNoneMatch,
