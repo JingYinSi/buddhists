@@ -1,5 +1,5 @@
 /**
- * Created by clx on 2017/10/13.
+ *  课程
  */
 const {
     ifMatch,
@@ -7,12 +7,12 @@ const {
     update,
     remove,
     findById
-} = require('../biz/Lesson');
+} = require('../biz/mygdh/Lesson');
 
 module.exports = {
     url: '/livingforest/api/lessons/:id',
     transitions: {
-        ActivatyStageLesson: {id: 'context.lesson'}
+        LessonInstance: {id: 'context.Lesson'}
     },
     rests: [{
             type: 'read',

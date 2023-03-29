@@ -1,6 +1,9 @@
 set RUNNING_MODE=rest
+set LOGLEVEL=debug
 set PORT=9505
 set MONGODB=mongodb://127.0.0.1:27017/buddhists
-set MQ=amqp://qladapfm:CjtgA21O-1Ux-L108UCR70TcJ4GDpRVh@spider.rmq.cloudamqp.com/qladapfm
+set MQ=amqp://guest:guest@127.0.0.1
 set JWT_SECRET=DBCEBERVEQVB1945G4GRG
+set AppId=wxc6f15800d186154e
+set AppSecret=593222138835dae2bbd53d83b7bad6b5
 node server.js

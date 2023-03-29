@@ -1,7 +1,10 @@
 set RUNNING_MODE=dev
 set SERIAL_PORT=ON
+set LOGLEVEL=debug
 set PORT=9505
-set MONGODB=mongodb://192.168.5.166:27017/RockStar
-set MQ=amqp://jsm:jsm@192.168.5.166
+set MONGODB=mongodb://127.0.0.1:27017/buddhists
+set MQ=amqp://guest:guest@127.0.0.1
 set JWT_SECRET=DBCEBERVEQVB1945G4GRG
+set AppId=wxc6f15800d186154e
+set AppSecret=593222138835dae2bbd53d83b7bad6b5
 node server.js
