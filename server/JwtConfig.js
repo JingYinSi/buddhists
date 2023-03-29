@@ -7,7 +7,7 @@ const
     axios = require('axios');
 
 const employeeEntity = require('./biz').Employee,
-    DEFAULT_ADMIN_ID = '$$$$livingforest$$admin',
+    DEFAULT_ADMIN_ID = '$$$$wx$$admin',
     DEFAULT_ADMIN_NAME = '@admin@',
     DEFAULT_ADMIN_PWD = '$9999$',
     DEFAULT_ADMIN_INFO = {

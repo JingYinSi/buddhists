@@ -4,7 +4,7 @@ const logger = require('@finelets/hyper-rest/app/Logger'),
 module.exports = {
     connect: process.env.MQ,
     exchanges: {
-        livingforest: {
+        wx: {
             isDefault: true,
             publishes: [
                 'employeePicChanged',

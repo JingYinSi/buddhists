@@ -24,7 +24,7 @@ services:
       - RUNNING_MODE=rest
       - PORT=9550
       - MONGODB=mongodb://wxdb:27017/wx
-      - MQ=amqp://jsm:jsm@livingforestmq
+      - MQ=amqp://jsm:jsm@wxmq
       - JWT_SECRET=MFswDQYJKoZIhvcNAQEBBQADSgAwRwJAamUL/pm3t5EZ
     entrypoint:
       - "sh"
@@ -38,5 +38,5 @@ services:
       # Don't sync the node_modules directory back to the client.
       - "/usr/app/wx/node_modules"
     links:
-      - bigcity_mongodb:livingforestdb
-      - bigcity_rabbitmq:livingforestmq
+      - bigcity_mongodb:wxdb
+      - bigcity_rabbitmq:wxmq

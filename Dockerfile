@@ -12,7 +12,7 @@ ADD . /app
 ENV RUNNING_MODE=rest
 ENV PORT=9550
 ENV MONGODB=mongodb://wxdb:27017/wx
-ENV MQ=amqp://jsm:jsm@livingforestmq
+ENV MQ=amqp://jsm:jsm@wxmq
 ENV JWT_SECRET=MFswDQYJKoZIhvcNAQEBBQADSgAwRwJAamUL/pm3t5EZ
 
 # Expose port

@@ -5,7 +5,7 @@ const fs = require("fs"),
 	flow = require("./server/Flow");
 
 let config = {
-	appName: "livingforest",
+	appName: "wx",
 	baseDir: __dirname,
 	messageCenterConfig,
 	jwtConfig,

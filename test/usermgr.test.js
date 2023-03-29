@@ -257,7 +257,7 @@ describe('权限管理', function () {
 
 	describe('JwtConfig', () => {
 		const createAuthConfig = require('../server/JwtConfig'),
-			DEFAULT_ADMIN_ID = '$$$$livingforest$$admin'
+			DEFAULT_ADMIN_ID = '$$$$wx$$admin'
 		let dbAuth
 
 		beforeEach(() => {
