@@ -5,7 +5,7 @@ const logger = require('@finelets/hyper-rest/app/Logger'),
     users = require('../biz').Employee
 
 module.exports = {
-    url: '/livingforest/api/auth/users/:id/password',
+    url: '/wx/api/auth/users/:id/password',
     rests: [{
             type: 'http',
             method: 'put',

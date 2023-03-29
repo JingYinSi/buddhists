@@ -18,7 +18,7 @@ const list = function (query) {
 };
 
 module.exports = {
-    url: '/livingforest/api/auth/users',
+    url: '/wx/api/auth/users',
     rests: [{
         type: 'create',
         target: 'User',

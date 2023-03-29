@@ -10,7 +10,7 @@ const {
 } = require('../biz/mygdh/Report');
 
 module.exports = {
-    url: '/livingforest/api/reports/:id',
+    url: '/wx/api/reports/:id',
     rests: [{
             type: 'read',
             ifNoneMatch,

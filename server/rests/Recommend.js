@@ -10,7 +10,7 @@ const {
 } = require('../biz/mygdh/Recommend');
 
 module.exports = {
-    url: '/livingforest/api/recommends/:id',
+    url: '/wx/api/recommends/:id',
     transitions: {
         ActivatyStageLesson: {id: 'context.recommend'}
     },

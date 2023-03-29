@@ -21,7 +21,7 @@ const list = function (query) {
 };
 
 module.exports = {
-    url: '/livingforest/api/lessons',
+    url: '/wx/api/lessons',
     transitions: {
         LessonInstance: {id: 'context.lesson'}
     },

@@ -1,7 +1,7 @@
 const picGridFs = require('../biz').PicGridFs
 
 module.exports = {
-    url: '/livingforest/api/pictures/:id',
+    url: '/wx/api/pictures/:id',
     transitions: {
         UserAvatar: {id: 'context.id'},
         User: {id: 'context'}

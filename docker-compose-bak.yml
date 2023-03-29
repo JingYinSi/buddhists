@@ -23,20 +23,20 @@ services:
     environment:
       - RUNNING_MODE=rest
       - PORT=9550
-      - MONGODB=mongodb://livingforestdb:27017/livingforest
+      - MONGODB=mongodb://wxdb:27017/wx
       - MQ=amqp://jsm:jsm@livingforestmq
       - JWT_SECRET=MFswDQYJKoZIhvcNAQEBBQADSgAwRwJAamUL/pm3t5EZ
     entrypoint:
       - "sh"
       - "-c"
       - "npm install && node server.js"
-    working_dir: "/usr/app/livingforest"
+    working_dir: "/usr/app/wx"
     ports:
       - "9550:9550"
     volumes:
-      - ".:/usr/app/livingforest"
+      - ".:/usr/app/wx"
       # Don't sync the node_modules directory back to the client.
-      - "/usr/app/livingforest/node_modules"
+      - "/usr/app/wx/node_modules"
     links:
       - bigcity_mongodb:livingforestdb
       - bigcity_rabbitmq:livingforestmq

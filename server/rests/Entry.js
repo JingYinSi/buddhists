@@ -1,5 +1,5 @@
 module.exports = {
-    url: '/livingforest/index.html',
+    url: '/wx/index.html',
     rests: [
         {
             type: 'entry'

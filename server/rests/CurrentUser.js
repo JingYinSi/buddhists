@@ -17,7 +17,7 @@ const scopes = {
 // TODO: 增加一种同当前用户相关的rest服务
 // TODO: 需提供测试用例
 module.exports = {
-    url: '/livingforest/api/currentUser',
+    url: '/wx/api/currentUser',
     rests: [{
             type: 'http',
             method: 'put',

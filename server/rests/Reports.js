@@ -21,7 +21,7 @@ const list = function (query) {
 };
 
 module.exports = {
-    url: '/livingforest/api/reports',
+    url: '/wx/api/reports',
     rests: [{
             type: 'create',
             target: 'Report',

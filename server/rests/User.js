@@ -10,7 +10,7 @@ const {
 } = require('../biz').Employee;
 
 module.exports = {
-    url: '/livingforest/api/users/:id',
+    url: '/wx/api/users/:id',
     transitions: {
         Purchase: {id: 'context'},
         Withdraw: {id: 'context'},

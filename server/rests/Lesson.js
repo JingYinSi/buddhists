@@ -10,7 +10,7 @@ const {
 } = require('../biz/mygdh/Lesson');
 
 module.exports = {
-    url: '/livingforest/api/lessons/:id',
+    url: '/wx/api/lessons/:id',
     transitions: {
         LessonInstance: {id: 'context.Lesson'}
     },

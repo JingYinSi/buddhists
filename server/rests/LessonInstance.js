@@ -11,7 +11,7 @@ const {
 const subDocPath = 'instances'
 
 module.exports = {
-    url: '/livingforest/api/lesson/instances/:id',
+    url: '/wx/api/lesson/instances/:id',
     transitions: {
         // LessonInstance: {id: 'context.Lesson'},
         // Lesson: {id: 'context.Lesson'}

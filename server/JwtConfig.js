@@ -19,8 +19,8 @@ const employeeEntity = require('./biz').Employee,
         ...DEFAULT_ADMIN_INFO
     }
 
-const baseUrl = '/livingforest/api',
-    loginUrl = '/livingforest/auth/login'
+const baseUrl = '/wx/api',
+    loginUrl = '/wx/auth/login'
 
 let __authenticate, __getUser, __haveAdmin
 let __wx_session_key

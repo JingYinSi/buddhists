@@ -21,7 +21,7 @@ const list = function (query) {
 };
 
 module.exports = {
-    url: '/livingforest/api/recommends',
+    url: '/wx/api/recommends',
     rests: [{
             type: 'create',
             target: 'Recommend',
