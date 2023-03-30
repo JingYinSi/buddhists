@@ -1,8 +1,7 @@
 const
-    // userMgr = require('./biz/bas/Employee'),
     jwt = require('jsonwebtoken'),
     sessionMgr = require('@finelets/hyper-rest/jwt/WxSessions'),
-    userMgr = require('@finelets/hyper-rest/usermgr/Users'),
+    userMgr = require('./biz/mygdh/WxUser'),
     logger = require('@finelets/hyper-rest/app/Logger'),
     axios = require('axios');
 
@@ -37,12 +36,8 @@ defaultSignOptions.expiresIn = expiresIn || defaultSignOptions.expiresIn
 if (!Appid || !AppSecret || !jwtSecret)
     throw 'To use WxJwtAuthenticate, you must set env AppSecret, JWT_SECRET, SessionExpiresIn correctly'
 const config = {
-    // forAll: (token)=>{
-    //     logger.debug("forAll forAll forAll forAll forAll forAll")
-    //     return Promise.resolve({token})
-    // },
     forAll: (token) => {
-        logger.debug("forAll forAll forAll forAll forAll forAll")
+        logger.debug("forAll forAll forAll forAll forAll forAll:" + token)
         let decode
         try {
             decode = jwt.verify(token, jwtSecret, defaultSignOptions)
@@ -66,19 +61,55 @@ const config = {
         }
         return userMgr.getUser(user)
     },
-    authenticate: (username, password) => {
-        logger.debug("authenticate authenticate authenticate authenticate authenticate")
-        let {code} = username
+    authenticate: ({code, username, password}) => {
+        let token
+
         if (!code) {
-            logger.error("We havent received the code from client")
-            return Promise.resolve();
+            return userMgr.authenticate(username, password)
+                .then(user => {
+                    if (user) {
+                        token = jwt.sign({user: user.id}, jwtSecret, defaultSignOptions)
+                        return {user, token}
+                    }
+                    return
+                })
         }
-        let url = `https://api.weixin.qq.com/sns/jscode2session?appid=${process.env.AppId}&secret=${process.env.AppSecret}&js_code=${code}&grant_type=authorization_code`
+
+        let url = `https://api.weixin.qq.com/sns/jscode2session?appid=${Appid}&secret=${AppSecret}&js_code=${code}&grant_type=authorization_code`
         return axios.get(url)
             .then(res => {
-                logger.debug("login to wx by code: " + JSON.stringify(res.data, null, 2))
-                __wx_session_key = res.data.session_key
-                return {id: res.data.openid}
+                const {openid, session_key, errmsg} = res.data
+
+                // let openid = code
+                // let session_key ="222"
+                // let errmsg =""
+
+                if (errmsg) throw new Error(`Wechat login fail: ${errmsg}`)
+
+                if (username) {
+                    return userMgr.authenticate(username, password)
+                        .then(user => {
+                            if (user) {
+                                token = jwt.sign({openid, user: user.id}, jwtSecret, defaultSignOptions)
+                                return sessionMgr.create({token, openid, userId: user.id, session_key})
+                                    .then(() => {
+                                        return userMgr.createWechatUser({id: user.id, openid})
+                                    })
+                                    .then((data) => {
+                                        return {user: data, token}
+                                    })
+                            }
+                            return
+                        })
+                }
+                token = jwt.sign({openid}, jwtSecret, defaultSignOptions)
+                return sessionMgr.create({token, openid, session_key})
+                    .then(() => {
+                        return userMgr.createWechatUser({openid})
+                    })
+                    .then((user) => {
+                        return {user, token}
+                    })
             })
     },
     getUser: (id) => {

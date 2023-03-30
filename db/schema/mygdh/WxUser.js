@@ -18,10 +18,11 @@ const lessonInSchema = createSchema({
 })
 
 const dbModel = createCollection({
-    name: 'User',
+    name: 'WxUser',
     schema: {
-        userId: {type: String, required: true},
+        userId: {type: String},
         name: {type: String, required: true},
+        openid: String,
         prov: {type: String},
         city: {type: String},
         pic: String,
@@ -30,14 +31,12 @@ const dbModel = createCollection({
         statistics: [statisticSchema],
         lessonIns: [lessonInSchema]
     },
-    indexes: [{
-        index: {
-            name: 1
-        },
-        options: {
-            unique: true
+    indexes: [
+        {
+            index: {userId: 1, openid: 1},
+            options: {unique: true}
         }
-    }]
+    ]
 })
 
 module.exports = dbModel
