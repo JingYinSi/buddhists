@@ -120,7 +120,6 @@ const config = {
 }
 
 function create(dbAuth) {
-    logger.debug("create create create create create create")
     dbAuth = dbAuth || employeeEntity
     __forAll = dbAuth.forAll
     __authenticate = dbAuth.authenticate
