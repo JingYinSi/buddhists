@@ -1,4 +1,4 @@
-const entity = require('../biz').Employee;
+const entity = require('../biz/mygdh/WxUser');
 
 const list = function (query) {
     let condi

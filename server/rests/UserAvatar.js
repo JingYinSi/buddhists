@@ -1,5 +1,5 @@
 const picGridFs = require('../biz').PicGridFs,
-    entity = require('../biz').Employee,
+    entity = require('../biz/mygdh/WxUser'),
     mqPublish = require('@finelets/hyper-rest/mq')
 
 module.exports = {

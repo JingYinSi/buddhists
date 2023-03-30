@@ -8,12 +8,12 @@ module.exports = {
         reports: 'Reports'
     },
     Users: {
-        add: 'RegisterUser',
+        add: 'Lessons',
         home: 'Entry'
     },
     User: {
-        password: 'Password',
-        authorize: 'Authorization'
+        self: 'User',
+        collection: 'Users'
     },
     Lessons: {
         add: 'Lessons',
