@@ -1,26 +1,29 @@
 /**
- * Created by clx on 2017/10/13.
+ * 课程实例
  */
 const {
-    ifMatch,
     ifNoneMatch,
     updateSubDoc,
     removeSubDoc,
     findSubDocById
-} = require('../biz/Activaty');
+} = require('../biz/mygdh/Lesson')
 
-const subDocPath = 'stages.lessons'
+const subDocPath = 'instances'
 
 module.exports = {
-    url: '/livingforest/api/activaty/stage/lessons/:id',
+    url: '/wx/api/lesson/instances/:id',
+    transitions: {
+        // LessonInstance: {id: 'context.Lesson'},
+        // Lesson: {id: 'context.Lesson'}
+    },
     rests: [{
-            type: 'read',
-            ifNoneMatch,
-            handler: (id) => findSubDocById(id, subDocPath)
-        },
+        type: 'read',
+        ifNoneMatch,
+        handler: (id) => findSubDocById(id, subDocPath)
+    },
         {
             type: 'update',
-            ifMatch,
+            conditional: false,
             handler: (id, data) => {
                 data.id = id
                 return updateSubDoc(subDocPath, data)

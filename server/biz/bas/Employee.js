@@ -130,6 +130,12 @@ const obj = {
             }
         }
         return entity.search(finalCond, text, sort)
+    },
+    getUser: (id) => {
+        return schema.findById('99', { password: 0, __v: 0, createdAt: 0, updatedAt: 0})
+            .then(doc => {
+                if (doc) return doc.toJSON()
+            })
     }
 }
 

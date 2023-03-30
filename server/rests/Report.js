@@ -1,5 +1,5 @@
 /**
- *  课程
+ *  报数
  */
 const {
     ifMatch,
@@ -7,13 +7,10 @@ const {
     update,
     remove,
     findById
-} = require('../biz/mygdh/Lesson');
+} = require('../biz/mygdh/Report');
 
 module.exports = {
-    url: '/wx/api/lessons/:id',
-    transitions: {
-        LessonInstance: {id: 'context.Lesson'}
-    },
+    url: '/wx/api/reports/:id',
     rests: [{
             type: 'read',
             ifNoneMatch,

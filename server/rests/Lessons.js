@@ -1,4 +1,7 @@
-const entity = require('../biz/Lesson');
+/**
+ *  课程
+ */
+const entity = require('../biz/mygdh/Lesson');
 
 const list = function (query) {
     let condi
@@ -18,14 +21,17 @@ const list = function (query) {
 };
 
 module.exports = {
-    url: '/livingforest/api/lessons',
+    url: '/wx/api/lessons',
+    transitions: {
+        LessonInstance: {id: 'context.lesson'}
+    },
     rests: [{
-            type: 'create',
-            target: 'Lesson',
-            handler: (req) => {
-                return entity.create(req.body)
-            }
-        },
+        type: 'create',
+        target: 'Lesson',
+        handler: (req) => {
+            entity.create(req.body)
+        }
+    },
         {
             type: 'query',
             element: 'Lesson',

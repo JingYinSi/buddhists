@@ -1,9 +1,9 @@
 const picGridFs = require('../biz').PicGridFs,
-    entity = require('../biz').Employee,
+    entity = require('../biz/mygdh/WxUser'),
     mqPublish = require('@finelets/hyper-rest/mq')
 
 module.exports = {
-    url: '/livingforest/api/users/:id/pic',
+    url: '/wx/api/users/:id/pic',
     rests: [{
             type: 'upload',
             target: 'Avatar',

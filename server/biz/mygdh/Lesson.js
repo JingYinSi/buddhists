@@ -1,4 +1,4 @@
-const schema = require('../../db/schema/Lesson'),
+const schema = require('../../../db/schema/mygdh/Lesson'),
 	createEntity = require('@finelets/hyper-rest/db/mongoDb/DbEntity')
 
 const config = {

@@ -7,10 +7,10 @@ const {
     update,
     remove,
     findById
-} = require('../biz').Employee;
+} = require('../biz/mygdh/WxUser');
 
 module.exports = {
-    url: '/livingforest/api/users/:id',
+    url: '/wx/api/users/:id',
     transitions: {
         Purchase: {id: 'context'},
         Withdraw: {id: 'context'},

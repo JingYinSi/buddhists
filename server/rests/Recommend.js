@@ -1,5 +1,5 @@
 /**
- * Created by clx on 2017/10/13.
+ *  推荐
  */
 const {
     ifMatch,
@@ -7,13 +7,12 @@ const {
     update,
     remove,
     findById
-} = require('../biz/Activaty');
+} = require('../biz/mygdh/Recommend');
 
 module.exports = {
-    url: '/livingforest/api/activaties/:id',
+    url: '/wx/api/recommends/:id',
     transitions: {
-        ActivatyStageLesson: {id: 'context.Activaty'},
-        ActivatyStage: {id: 'context.Activaty'}
+        ActivatyStageLesson: {id: 'context.recommend'}
     },
     rests: [{
             type: 'read',

@@ -28,7 +28,7 @@ npm install
 restfulstart
 
 // 打开Chrome:
-http://localhost:8090/livingforest/index.html    
+http://localhost:8090/wx/index.html    
 
 
 ```

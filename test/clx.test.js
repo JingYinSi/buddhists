@@ -1,7 +1,7 @@
 const { expect } = require('chai'),
 {pick, map} = require('underscore')
 
-describe('LivingForest', () => {
+describe('wx', () => {
 	const ID_NOT_EXIST = '5ce79b99da3537277c3f3b66'
 	let schema, testTarget, toCreate;
 	let id, __v;

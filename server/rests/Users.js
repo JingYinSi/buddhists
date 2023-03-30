@@ -1,4 +1,4 @@
-const entity = require('../biz').Employee;
+const entity = require('../biz/mygdh/WxUser');
 
 const list = function (query) {
     let condi
@@ -18,8 +18,14 @@ const list = function (query) {
 };
 
 module.exports = {
-    url: '/livingforest/api/auth/users',
-    rests: [
+    url: '/wx/api/auth/users',
+    rests: [{
+        type: 'create',
+        target: 'User',
+        handler: (req) => {
+            return entity.create(req.body)
+        }
+    },
         {
             type: 'query',
             element: 'User',
