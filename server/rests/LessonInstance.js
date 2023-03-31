@@ -13,8 +13,6 @@ const subDocPath = 'instances'
 module.exports = {
     url: '/wx/api/lesson/instances/:id',
     transitions: {
-        // LessonInstance: {id: 'context.Lesson'},
-        // Lesson: {id: 'context.Lesson'}
     },
     rests: [{
         type: 'read',

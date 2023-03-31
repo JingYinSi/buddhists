@@ -16,7 +16,6 @@ const list = function (query) {
 module.exports = {
     url: '/wx/api/lesson/:id/instances',
     transitions: {
-        // LessonInstance: {id: 'context.Lesson'}
     },
     rests: [{
             type: 'create',

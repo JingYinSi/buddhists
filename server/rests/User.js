@@ -12,9 +12,6 @@ const {
 module.exports = {
     url: '/wx/api/users/:id',
     transitions: {
-        Purchase: {id: 'context'},
-        Withdraw: {id: 'context'},
-        PoTransaction: {id: 'context'}
     },
     rests: [{
             type: 'read',
