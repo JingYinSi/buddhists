@@ -5,7 +5,7 @@ const
     logger = require('@finelets/hyper-rest/app/Logger'),
     axios = require('axios');
 
-const employeeEntity = require('./biz').Employee,
+const wxUserEntity = require('./biz/mygdh/WxUser'),
     DEFAULT_ADMIN_ID = '$$$$wx$$admin',
     DEFAULT_ADMIN_NAME = '@admin@',
     DEFAULT_ADMIN_PWD = '$9999$',
@@ -75,14 +75,14 @@ const config = {
                 })
         }
 
-        let url = `https://api.weixin.qq.com/sns/jscode2session?appid=${Appid}&secret=${AppSecret}&js_code=${code}&grant_type=authorization_code`
-        return axios.get(url)
-            .then(res => {
-                const {openid, session_key, errmsg} = res.data
+        // let url = `https://api.weixin.qq.com/sns/jscode2session?appid=${Appid}&secret=${AppSecret}&js_code=${code}&grant_type=authorization_code`
+        // return axios.get(url)
+        //     .then(res => {
+        //         const {openid, session_key, errmsg} = res.data
 
-                // let openid = code
-                // let session_key ="222"
-                // let errmsg =""
+                let openid = code
+                let session_key ="222"
+                let errmsg =""
 
                 if (errmsg) throw new Error(`Wechat login fail: ${errmsg}`)
 
@@ -110,7 +110,7 @@ const config = {
                     .then((user) => {
                         return {user, token}
                     })
-            })
+            // })
     },
     getUser: (id) => {
         return Promise.resolve({id})
@@ -120,7 +120,7 @@ const config = {
 }
 
 function create(dbAuth) {
-    dbAuth = dbAuth || employeeEntity
+    dbAuth = dbAuth || wxUserEntity
     __forAll = dbAuth.forAll
     __authenticate = dbAuth.authenticate
     __getUser = dbAuth.getUser || dbAuth.findById
