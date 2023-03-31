@@ -8,7 +8,7 @@ module.exports = {
         reports: 'Reports'
     },
     Users: {
-        add: 'Lessons',
+        add: 'RegisterUser',
         home: 'Entry'
     },
     User: {

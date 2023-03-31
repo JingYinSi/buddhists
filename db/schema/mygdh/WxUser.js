@@ -3,13 +3,8 @@ const mongoose = require('mongoose'),
     createSchema = require('@finelets/hyper-rest/db/mongoDb/CreateSchema'),
     ObjectId = mongoose.Schema.Types.ObjectId;
 
-const statisticSchema = createSchema({
-    dayLessonInsNumber: {type: Number, default: 0},
-    lessonDays: {type: Number, default: 0}
-})
-
 const lessonInSchema = createSchema({
-    lessonInsId: {type: ObjectId, required: true},
+    lessonInsId: {type: String, required: true},
     days: {type: Number, default: 0},
     dayTimes: {type: Number, default: 0},
     weekTimes: {type: Number, default: 0},
@@ -28,7 +23,8 @@ const dbModel = createCollection({
         pic: String,
         prayerText: String,
         unionId: String,
-        statistics: [statisticSchema],
+        dayLessonInsNumber: {type: Number, default: 0},
+        lessonDays: {type: Number, default: 0},
         lessonIns: [lessonInSchema]
     },
     indexes: [
