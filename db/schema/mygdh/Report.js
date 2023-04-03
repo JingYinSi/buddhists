@@ -3,6 +3,7 @@ const mongoose = require('mongoose'),
     ObjectId = mongoose.Schema.Types.ObjectId;
 
 const dbModel = createCollection({
+    lessonIns: {type: ObjectId, required: true},
     name: 'Report',
     schema: {
         user: {type: String, required: true},

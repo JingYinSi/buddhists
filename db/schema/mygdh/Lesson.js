@@ -1,8 +1,10 @@
 const mongoose = require('mongoose'),
     createCollection = require('@finelets/hyper-rest/db/mongoDb/CreateCollection'),
-    createSchema = require('@finelets/hyper-rest/db/mongoDb/CreateSchema')
+    createSchema = require('@finelets/hyper-rest/db/mongoDb/CreateSchema'),
+    ObjectId = mongoose.Schema.Types.ObjectId;
 
 const instanceSchema = createSchema({
+    lesson: {type: ObjectId, required: true},
     start: Date,
     end: Date,
     target: {type: Number, default: 0},
