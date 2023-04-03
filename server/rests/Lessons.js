@@ -29,7 +29,7 @@ module.exports = {
         type: 'create',
         target: 'Lesson',
         handler: (req) => {
-            entity.create(req.body)
+            return entity.create(req.body)
         }
     },
         {

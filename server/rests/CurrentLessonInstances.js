@@ -21,7 +21,7 @@ const list = function (query) {
                     return data[0]
                 })
             })
-            return Promise.all(promises).then(function(values){
+            return Promise.all(promises).then(function (values) {
                 // print_array(values)
                 return {
                     items: values
@@ -42,15 +42,16 @@ function print_array(arr) {
 }
 
 module.exports = {
-    url: '/wx/api/currentLessonInstances',
+    url: '/wx/api/lesson/instances/current',
     transitions: {},
-    rests: [{
-        type: 'create',
-        target: 'LessonInstance',
-        handler: (req) => {
-            return entity.createSubDoc(req.params['id'], subDocPath, req.body)
-        }
-    },
+    rests: [
+        // {
+        //     type: 'create',
+        //     target: 'LessonInstance',
+        //     handler: (req) => {
+        //         return entity.createSubDoc(req.params['id'], subDocPath, req.body)
+        //     }
+        // },
         {
             type: 'query',
             element: 'LessonInstance',

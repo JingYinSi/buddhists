@@ -32,7 +32,12 @@ module.exports = {
     LessonInstance: {
         self: "LessonInstance",
         collection: "LessonInstances",
-        refLesson: "Lesson"
+        instance: "LessonInstance",
+        lesson: "Lesson"
+    },
+    CurrentLessonInstances: {
+        add: 'CurrentLessonInstances',
+        home: 'Entry'
     },
     Recommends: {
         add: 'Recommends',
