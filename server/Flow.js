@@ -2,10 +2,11 @@ module.exports = {
     Entry: {
         users: 'Users',
         register: 'RegisterUser',
-        currentUser: 'CurrentUser',
         lessons: 'Lessons',
         recommends: 'Recommends',
-        reports: 'Reports'
+        reports: 'Reports',
+        currentUser: 'CurrentUser',
+        currentLessonInstances: 'CurrentLessonInstances'
     },
     Users: {
         add: 'RegisterUser',
