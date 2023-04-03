@@ -1,5 +1,5 @@
 /**
- * 课程实例
+ * 当前课程实例
  */
 const entity = require('../biz/mygdh/Lesson')
 const subDocPath = 'instances'

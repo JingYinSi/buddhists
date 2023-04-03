@@ -8,6 +8,7 @@ const {
     remove,
     findById
 } = require('../biz/mygdh/Lesson');
+const logger = require('@finelets/hyper-rest/app/Logger')
 
 module.exports = {
     url: '/wx/api/lessons/:id',

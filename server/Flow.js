@@ -21,19 +21,28 @@ module.exports = {
         home: 'Entry'
     },
     Lesson: {
-        self: "Lesson",
-        collection: "Lessons",
-        instances: "LessonInstances"
+        self: 'Lesson',
+        collection: 'Lessons',
+        instances: 'LessonInstances'
     },
     LessonInstances: {
         add: 'LessonInstances',
         parent: 'Lesson'
     },
     LessonInstance: {
-        self: "LessonInstance",
-        collection: "LessonInstances",
-        instance: "LessonInstance",
-        lesson: "Lesson"
+        self: 'LessonInstance',
+        collection: 'LessonInstances',
+        instance: 'LessonInstance',
+        lesson: 'Lesson',
+        report: 'CurrentLessonInstanceReport',
+        reports: 'CurrentLessonInstanceReports'
+    },
+    CurrentLessonInstanceReport: {
+        add: 'CurrentLessonInstanceReport',
+        self: 'CurrentLessonInstanceReport',
+    },
+    CurrentLessonInstanceReports: {
+        collection: 'CurrentLessonInstanceReports',
     },
     CurrentLessonInstances: {
         add: 'CurrentLessonInstances',
@@ -44,8 +53,8 @@ module.exports = {
         home: 'Entry'
     },
     Recommend: {
-        self: "Recommend",
-        collection: "Recommends"
+        self: 'Recommend',
+        collection: 'Recommends'
     },
     Reports: {
         add: 'Reports',

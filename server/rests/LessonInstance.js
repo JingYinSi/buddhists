@@ -3,12 +3,14 @@
  */
 const {
     ifNoneMatch,
+    ifMatch,
     updateSubDoc,
     removeSubDoc,
     findSubDocById
 } = require('../biz/mygdh/Lesson')
 
 const subDocPath = 'instances'
+const logger = require('@finelets/hyper-rest/app/Logger')
 
 module.exports = {
     url: '/wx/api/lesson/instances/:id',
@@ -21,6 +23,7 @@ module.exports = {
     },
         {
             type: 'update',
+            // ifMatch,
             conditional: false,
             handler: (id, data) => {
                 data.id = id
