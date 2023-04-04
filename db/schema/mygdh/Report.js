@@ -10,14 +10,14 @@ const dbModel = createCollection({
         times: {type: Number, default: 0},
         reportDate: Date
     },
-    indexes: [{
-        index: {
-            user: 1
+    indexes: [
+        {
+            index: {user: 1}
         },
-        index: {
-            lessonIns: 1
+        {
+            index: {lessonIns: 1}
         }
-    }]
+    ]
 })
 
 module.exports = dbModel

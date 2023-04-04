@@ -12,7 +12,6 @@ const {
 module.exports = {
     url: '/wx/api/recommends/:id',
     transitions: {
-        ActivatyStageLesson: {id: 'context.recommend'}
     },
     rests: [{
             type: 'read',
