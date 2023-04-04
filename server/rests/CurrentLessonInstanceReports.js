@@ -2,6 +2,7 @@
  * 课程实例跑马灯
  */
 const entity = require('../biz/mygdh/Report');
+const WxUserEntity = require('../biz/mygdh/WxUser');
 const logger = require('@finelets/hyper-rest/app/Logger')
 
 const list = function (query) {
@@ -15,6 +16,8 @@ const list = function (query) {
         })
 };
 
+
+
 module.exports = {
     url: '/wx/api/lesson/instances/current/:id/reports',
     transitions: {
@@ -25,16 +28,16 @@ module.exports = {
             target: 'Report',
             handler: (req) => {
                 const data = req.body
-                // if(!req.user || !data || !req.query.scope || req.user.id !== data.id) {
+                // if (!req.user || !data) {
                 //     return res.status(403).end()
                 // }
-                // req.id = req.user.id
+                // let openid = req.user.openid
+                // let text
+                // WxUserEntity.search({"openid": "eeeeeee"})
+
                 data.user = '642a389d2b15de4fe4c573ac'
-                logger.error("mmmmmmmm:" + req.params['id'])
                 data.lessonIns = req.params['id']
                 data.reportDate = ''
-                logger.error("xxxxxxxxx:" + data)
-                logger.error("0000000000000:" + data.user)
                 return entity.create(req.body)
             }
         },

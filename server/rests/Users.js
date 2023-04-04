@@ -20,7 +20,6 @@ const list = function (query) {
 module.exports = {
     url: '/wx/api/auth/users',
     transitions: {
-        // User: {id: 'context'}
     },
     rests: [{
         type: 'create',
