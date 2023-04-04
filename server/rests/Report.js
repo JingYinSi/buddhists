@@ -9,8 +9,12 @@ const {
     findById
 } = require('../biz/mygdh/Report');
 
+
 module.exports = {
     url: '/wx/api/reports/:id',
+    transitions: {
+        User: 'context.user'
+    },
     rests: [{
             type: 'read',
             ifNoneMatch,

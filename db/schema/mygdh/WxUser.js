@@ -4,7 +4,7 @@ const mongoose = require('mongoose'),
     ObjectId = mongoose.Schema.Types.ObjectId;
 
 const lessonInSchema = createSchema({
-    lessonInsId: {type: String, required: true},
+    lessonInsId: {type: ObjectId, required: true},
     days: {type: Number, default: 0},
     dayTimes: {type: Number, default: 0},
     weekTimes: {type: Number, default: 0},

@@ -38,14 +38,16 @@ module.exports = {
         reports: 'CurrentLessonInstanceReports'
     },
     CurrentLessonInstanceReport: {
-        add: 'CurrentLessonInstanceReport',
         self: 'CurrentLessonInstanceReport',
+        add: 'CurrentLessonInstanceReport',
+        user: 'User'
     },
     CurrentLessonInstanceReports: {
-        collection: 'CurrentLessonInstanceReports',
+        self: 'CurrentLessonInstanceReports',
+        collection: 'CurrentLessonInstanceReports'
     },
     CurrentLessonInstances: {
-        add: 'CurrentLessonInstances',
+        self: 'CurrentLessonInstances',
         home: 'Entry'
     },
     Recommends: {
@@ -62,6 +64,7 @@ module.exports = {
     },
     Report: {
         self: "Report",
+        user: "User",
         collection: "Reports"
     }
 }

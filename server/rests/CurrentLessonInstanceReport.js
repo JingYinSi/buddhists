@@ -13,7 +13,9 @@ const logger = require('@finelets/hyper-rest/app/Logger')
 
 module.exports = {
     url: '/wx/api/lesson/instances/current/:id/report',
-    transitions: {},
+    transitions: {
+        User: 'context.user'
+    },
     rests: [
         {
             type: 'create',
@@ -24,7 +26,7 @@ module.exports = {
                 //     return res.status(403).end()
                 // }
                 // req.id = req.user.id
-                data.user = '666666'
+                data.user = '642a389d2b15de4fe4c573ac'
                 logger.error("mmmmmmmm:" + req.params['id'])
                 data.lessonIns = req.params['id']
                 logger.error("xxxxxxxxx:" + data)
