@@ -33,23 +33,6 @@ module.exports = {
                 logger.error("0000000000000:" + data.user)
                 return entity.create(req.body)
             }
-        },
-        {
-            type: 'read',
-            ifNoneMatch,
-            handler: findById
-        },
-        {
-            type: 'update',
-            ifMatch,
-            handler: (id, data) => {
-                data.id = id
-                return update(data)
-            }
-        },
-        {
-            type: 'delete',
-            handler: remove
         }
     ]
 }
