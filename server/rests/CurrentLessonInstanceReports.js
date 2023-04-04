@@ -22,6 +22,24 @@ module.exports = {
     },
     rests: [
         {
+            type: 'create',
+            target: 'Report',
+            handler: (req) => {
+                const data = req.body
+                // if(!req.user || !data || !req.query.scope || req.user.id !== data.id) {
+                //     return res.status(403).end()
+                // }
+                // req.id = req.user.id
+                data.user = '642a389d2b15de4fe4c573ac'
+                logger.error("mmmmmmmm:" + req.params['id'])
+                data.lessonIns = req.params['id']
+                data.reportDate = ''
+                logger.error("xxxxxxxxx:" + data)
+                logger.error("0000000000000:" + data.user)
+                return entity.create(req.body)
+            }
+        },
+        {
             type: 'query',
             element: 'Report',
             handler: id => list(id)

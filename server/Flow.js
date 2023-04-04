@@ -34,13 +34,8 @@ module.exports = {
         collection: 'LessonInstances',
         instance: 'LessonInstance',
         lesson: 'Lesson',
-        report: 'CurrentLessonInstanceReport',
+        report: 'CurrentLessonInstanceReports',
         reports: 'CurrentLessonInstanceReports'
-    },
-    CurrentLessonInstanceReport: {
-        self: 'CurrentLessonInstanceReport',
-        add: 'CurrentLessonInstanceReport',
-        user: 'User'
     },
     CurrentLessonInstanceReports: {
         self: 'CurrentLessonInstanceReports',
