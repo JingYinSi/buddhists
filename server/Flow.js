@@ -62,5 +62,19 @@ module.exports = {
         self: "Report",
         user: "User",
         collection: "Reports"
+    },
+    MyLesson: {
+        self: 'MyLesson',
+        lessonIns: 'MyLessonInses'
+    },
+    MyLessonInses: {
+        add: 'MyLessonInses',
+        parent: 'MyLesson'
+    },
+    MyLessonIns: {
+        self: 'MyLessonIns',
+        collection: 'MyLessonInses',
+        lessonIns: 'MyLessonIns',
+        myLesson: 'MyLesson'
     }
 }
