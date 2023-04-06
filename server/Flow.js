@@ -76,6 +76,11 @@ module.exports = {
         self: 'MyLessonIns',
         collection: 'MyLessonInses',
         lessonInstance: 'LessonInstance',
+        myReports: 'MyLessonInsReports',
         myInfo: 'MyInfo'
+    },
+    MyLessonInsReports: {
+        self: 'MyLessonInsReports',
+        parent: 'MyLessonIns'
     }
 }

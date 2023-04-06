@@ -3,10 +3,10 @@ const schema = require('../../../db/schema/mygdh/Report'),
 
 const config = {
     schema,
-    projection: ['user', 'lessonIns', 'times'],
-    updatables: ['user', 'lessonIns', 'times', 'reportDate'],
-    searchables: ['user'],
-    listable: ['user','lessonIns', 'times']
+    projection: ['user', 'lessonIns', 'times', 'createdAt'],
+    updatables: ['user', 'lessonIns', 'times', 'createdAt',],
+    searchables: ['user', 'lessonIns', 'createdAt'],
+    listable: ['user','lessonIns', 'times', 'createdAt']
 }
 
 const addIn = {}

@@ -20,6 +20,7 @@ const dbModel = createCollection({
         openid: String,
         prov: {type: String},
         city: {type: String},
+        district: {type: String},
         pic: String,
         prayerText: String,
         unionId: String,

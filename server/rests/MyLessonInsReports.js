@@ -1,15 +1,12 @@
 /**
- *  报数
+ *  我的功课报数
  */
 const entity = require('../biz/mygdh/Report');
 
 const list = function (query) {
-    let condi
-    try {
-        condi = JSON.parse(query.q);
-    } catch (e) {
-        condi = {}
-    }
+    // let openid = req.user.openid
+    let openid = '642a389d2b15de4fe4c573ac'
+    let condi = {'lessonIns': query.id, user: openid}
     let text
     return entity.search(condi, text)
         .then(function (list) {
@@ -20,14 +17,8 @@ const list = function (query) {
 };
 
 module.exports = {
-    url: '/wx/api/reports',
-    rests: [{
-            type: 'create',
-            target: 'Report',
-            handler: (req) => {
-                return entity.create(req.body)
-            }
-        },
+    url: '/wx/api/myLesson/inses/:id/reports',
+    rests: [
         {
             type: 'query',
             element: 'Report',

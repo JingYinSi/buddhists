@@ -7,7 +7,7 @@ const logger = require('@finelets/hyper-rest/app/Logger')
 const findMyInfo = function (query, req) {
     // let openid = req.user.openid
     let openid = 'eeeeeeee'
-    let condi = {"openid": openid}
+    let condi = {'openid': openid}
     let text
     return entity.search(condi, text)
         .then(function (list) {
