@@ -21,7 +21,7 @@ const config = {
     projection: {email: 0, userId: 0, openid: 0},
     updatables: ['userId', 'name', 'openid', 'email', 'pic'],
     searchables: ['userId', 'name', 'openid', 'email', 'pic'],
-    listable: {email: 0, userId: 0, openid: 0},
+    listable: ['name'],
     setValues: (doc, data) => {
     }
 }
