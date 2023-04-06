@@ -3,8 +3,8 @@ const schema = require('../../../db/schema/mygdh/Lesson'),
 
 const config = {
     schema,
-    projection: ['name', 'desc'],
-    updatables: ['name', 'title', 'desc','instances'],
+    projection: ['name', 'title', 'pic', 'desc'],
+    updatables: ['name', 'title', 'pic', 'desc', 'instances'],
     searchables: ['name', 'desc'],
     listable: ['name']
 }
