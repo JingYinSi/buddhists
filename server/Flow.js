@@ -7,7 +7,7 @@ module.exports = {
         reports: 'Reports',
         currentUser: 'CurrentUser',
         currentLessonInstances: 'CurrentLessonInstances',
-        myLesson: 'MyLesson'
+        myInfo: 'MyInfo'
     },
     Users: {
         add: 'RegisterUser',
@@ -63,19 +63,19 @@ module.exports = {
         user: "User",
         collection: "Reports"
     },
-    MyLesson: {
-        self: 'MyLesson',
+    MyInfo: {
+        self: 'MyInfo',
         lessonIns: 'MyLessonInses',
         home: 'Entry'
     },
     MyLessonInses: {
         add: 'MyLessonInses',
-        parent: 'MyLesson'
+        parent: 'MyInfo'
     },
     MyLessonIns: {
         self: 'MyLessonIns',
         collection: 'MyLessonInses',
-        lessonIns: 'MyLessonIns',
-        myLesson: 'MyLesson'
+        lessonInstance: 'LessonInstance',
+        myInfo: 'MyInfo'
     }
 }

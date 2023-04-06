@@ -4,27 +4,28 @@
 const entity = require('../biz/mygdh/WxUser');
 const logger = require('@finelets/hyper-rest/app/Logger')
 
-const findMyLesson = function (query, req) {
+const findMyInfo = function (query, req) {
     // let openid = req.user.openid
     let openid = 'eeeeeeee'
     let condi = {"openid": openid}
     let text
     return entity.search(condi, text)
         .then(function (list) {
-            return list[0]
+            let lessonInsCnt = list[0].lessonIns.length
+            return {lessonInsCnt ,...list[0]}
         })
 };
 
 
 module.exports = {
-    url: '/wx/api/myLesson',
+    url: '/wx/api/myInfo',
     transitions: {
     },
     rests: [
         {
             type: 'read',
-            element: 'MyLesson',
-            handler: findMyLesson
+            element: 'MyInfo',
+            handler: findMyInfo
         }
     ]
 }
