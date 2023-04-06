@@ -3,7 +3,7 @@ const schema = require('../../../db/schema/mygdh/Report'),
 
 const config = {
     schema,
-    projection: ['user'],
+    projection: ['user', 'lessonIns', 'times'],
     updatables: ['user', 'lessonIns', 'times', 'reportDate'],
     searchables: ['user'],
     listable: ['user','lessonIns', 'times']

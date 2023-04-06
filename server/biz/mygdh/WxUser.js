@@ -18,10 +18,10 @@ const schema = require('../../../db/schema/mygdh/WxUser'),
 
 const config = {
     schema,
-    projection: {email: 0},
+    projection: {email: 0, userId: 0, openid: 0},
     updatables: ['userId', 'name', 'openid', 'email', 'pic'],
     searchables: ['userId', 'name', 'openid', 'email', 'pic'],
-    listable: {email: 0},
+    listable: {email: 0, userId: 0, openid: 0},
     setValues: (doc, data) => {
     }
 }

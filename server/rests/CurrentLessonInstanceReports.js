@@ -17,11 +17,9 @@ const list = function (query) {
 };
 
 
-
 module.exports = {
     url: '/wx/api/lesson/instances/current/:id/reports',
-    transitions: {
-    },
+    transitions: {},
     rests: [
         {
             type: 'create',
@@ -32,8 +30,14 @@ module.exports = {
                 //     return res.status(403).end()
                 // }
                 // let openid = req.user.openid
-                // let text
-                // WxUserEntity.search({"openid": "eeeeeee"})
+
+                // return WxUserEntity.search({"openid": "7777777"})
+                //     .then(function (list) {
+                //         data.user = list[0].id
+                //         data.lessonIns = req.params['id']
+                //         data.reportDate = ''
+                //         return entity.create(req.body)
+                //     })
 
                 data.user = '642a389d2b15de4fe4c573ac'
                 data.lessonIns = req.params['id']
