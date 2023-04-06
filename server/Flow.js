@@ -65,7 +65,8 @@ module.exports = {
     },
     MyLesson: {
         self: 'MyLesson',
-        lessonIns: 'MyLessonInses'
+        lessonIns: 'MyLessonInses',
+        home: 'Entry'
     },
     MyLessonInses: {
         add: 'MyLessonInses',
