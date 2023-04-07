@@ -7,7 +7,7 @@ module.exports = {
         reports: 'Reports',
         currentUser: 'CurrentUser',
         currentLessonInstances: 'CurrentLessonInstances',
-        myLesson: 'MyLesson'
+        myInfo: 'MyInfo'
     },
     Users: {
         add: 'RegisterUser',
@@ -36,7 +36,8 @@ module.exports = {
         instance: 'LessonInstance',
         lesson: 'Lesson',
         report: 'CurrentLessonInstanceReports',
-        reports: 'CurrentLessonInstanceReports'
+        reports: 'CurrentLessonInstanceReports',
+        reportsRank: 'ReportsRank'
     },
     CurrentLessonInstanceReports: {
         self: 'CurrentLessonInstanceReports',
@@ -44,6 +45,10 @@ module.exports = {
     },
     CurrentLessonInstances: {
         self: 'CurrentLessonInstances',
+        home: 'Entry'
+    },
+    ReportsRank: {
+        self: 'ReportsRank',
         home: 'Entry'
     },
     Recommends: {
@@ -59,8 +64,28 @@ module.exports = {
         home: 'Entry'
     },
     Report: {
-        self: "Report",
-        user: "User",
-        collection: "Reports"
+        self: 'Report',
+        user: 'User',
+        collection: 'Reports'
+    },
+    MyInfo: {
+        self: 'MyInfo',
+        lessonIns: 'MyLessonInses',
+        home: 'Entry'
+    },
+    MyLessonInses: {
+        add: 'MyLessonInses',
+        parent: 'MyInfo'
+    },
+    MyLessonIns: {
+        self: 'MyLessonIns',
+        collection: 'MyLessonInses',
+        lessonInstance: 'LessonInstance',
+        myReports: 'MyLessonInsReports',
+        myInfo: 'MyInfo'
+    },
+    MyLessonInsReports: {
+        self: 'MyLessonInsReports',
+        parent: 'MyLessonIns'
     }
 }

@@ -13,7 +13,7 @@ const {
 module.exports = {
     url: '/wx/api/reports/:id',
     transitions: {
-        User: 'context.user'
+        User: {id: 'context.user'}
     },
     rests: [{
             type: 'read',

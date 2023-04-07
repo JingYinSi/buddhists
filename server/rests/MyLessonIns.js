@@ -7,15 +7,14 @@ const {
     updateSubDoc,
     removeSubDoc,
     findSubDocById
-} = require('../biz/mygdh/Lesson')
+} = require('../biz/mygdh/WxUser')
 
-const subDocPath = 'instances'
+const subDocPath = 'lessonIns'
 const logger = require('@finelets/hyper-rest/app/Logger')
 
 module.exports = {
-    url: '/wx/api/lesson/instances/:id',
+    url: '/wx/api/myLesson/inses/:id',
     transitions: {
-        MyLessonIns: {id: 'context.lessonInsId'}
     },
     rests: [{
         type: 'read',

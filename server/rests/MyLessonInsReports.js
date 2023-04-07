@@ -1,13 +1,12 @@
 /**
- * 我的功课薄
+ *  我的功课报数
  */
-const entity = require('../biz/mygdh/WxUser');
-const logger = require('@finelets/hyper-rest/app/Logger')
+const entity = require('../biz/mygdh/Report');
 
-const list = function (query, req) {
+const list = function (query) {
     // let openid = req.user.openid
-    let openid = 'eeeeeeee'
-    let condi = {"openid": openid}
+    let openid = '642a389d2b15de4fe4c573ac'
+    let condi = {'lessonIns': query.id, user: openid}
     let text
     return entity.search(condi, text)
         .then(function (list) {
@@ -17,11 +16,8 @@ const list = function (query, req) {
         })
 };
 
-
 module.exports = {
-    url: '/wx/api/myLessons',
-    transitions: {
-    },
+    url: '/wx/api/myLesson/inses/:id/reports',
     rests: [
         {
             type: 'query',

@@ -1,7 +1,7 @@
 /**
- *  报数
+ *  报数排名
  */
-const entity = require('../biz/mygdh/Report');
+const entity = require('../biz/mygdh/ReportRank');
 
 const list = function (query) {
     let condi
@@ -20,14 +20,11 @@ const list = function (query) {
 };
 
 module.exports = {
-    url: '/wx/api/reports',
-    rests: [{
-            type: 'create',
-            target: 'Report',
-            handler: (req) => {
-                return entity.create(req.body)
-            }
-        },
+    url: '/wx/api/lesson/instances/:id/reportsRank',
+    transitions: {
+        LessonInstance: {id: 'context.id'}
+    },
+    rests: [
         {
             type: 'query',
             element: 'Report',
