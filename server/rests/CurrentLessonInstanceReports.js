@@ -25,35 +25,35 @@ module.exports = {
         {
             type: 'create',
             target: 'Report',
-            handler: (req) => {
+            handler: (req, res) => {
                 const data = req.body
-                // if (!req.user || !data) {
-                //     return res.status(403).end()
-                // }
-                // let openid = req.user.openid
+                let openid
+                if (process.env.RUNNING_MODE === 'rest') {
+                    openid = '666666'
+                } else {
+                    if (!req.user || !data) {
+                        return res.status(403).end()
+                    }
+                    openid = req.user.openid
+                }
+                return WxUserEntity.search({"openid": openid})
+                    .then(function (list) {
+                        data.user = list[0].id
+                        data.lessonIns = req.params['id']
+                        data.reportDate = ''
+                        return entity.create(req.body)
+                            .then(data => {
+                                const publish = mqPublish['reportCreated']
+                                return publish({
+                                    times: data.times,
+                                    user: data.user,
+                                    lessonIns: data.lessonIns,
+                                    id: data.id
+                                })
 
-                // return WxUserEntity.search({"openid": "7777777"})
-                //     .then(function (list) {
-                //         data.user = list[0].id
-                //         data.lessonIns = req.params['id']
-                //         data.reportDate = ''
-                //         return entity.create(req.body)
-                //     })
-
-                data.user = '642a389d2b15de4fe4c573ac'
-                data.lessonIns = req.params['id']
-                data.reportDate = ''
-                return entity.create(req.body)
-                    .then(data => {
-                        const publish = mqPublish['reportCreated']
-                        return publish({
-                            times: data.times,
-                            user: data.user,
-                            lessonIns: data.lessonIns,
-                            id: data.id
-                        })
-
+                            })
                     })
+
             }
         },
         {

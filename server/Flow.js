@@ -6,7 +6,7 @@ module.exports = {
         recommends: 'Recommends',
         reports: 'Reports',
         currentLessonInstances: 'CurrentLessonInstances',
-        myInfo: 'MyInfo'
+        myInfos: 'MyInfos'
     },
     Users: {
         add: 'RegisterUser',
@@ -67,10 +67,13 @@ module.exports = {
         user: 'User',
         collection: 'Reports'
     },
+    MyInfos: {
+        home: 'Entry'
+    },
     MyInfo: {
         self: 'MyInfo',
         lessonIns: 'MyLessonInses',
-        home: 'Entry'
+        collection: 'MyInfos'
     },
     MyLessonInses: {
         add: 'MyLessonInses',
