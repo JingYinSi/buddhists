@@ -75,42 +75,72 @@ const config = {
                 })
         }
 
-        // let url = `https://api.weixin.qq.com/sns/jscode2session?appid=${Appid}&secret=${AppSecret}&js_code=${code}&grant_type=authorization_code`
-        // return axios.get(url)
-        //     .then(res => {
-        //         const {openid, session_key, errmsg} = res.data
+        if (process.env.RUNNING_MODE !== 'rest') {
+            let url = `https://api.weixin.qq.com/sns/jscode2session?appid=${Appid}&secret=${AppSecret}&js_code=${code}&grant_type=authorization_code`
+            return axios.get(url)
+                .then(res => {
+                    const {openid, session_key, errmsg} = res.data
 
-                let openid = code
-                let session_key ="222"
-                let errmsg =""
+                    if (errmsg) throw new Error(`Wechat login fail: ${errmsg}`)
 
-                if (errmsg) throw new Error(`Wechat login fail: ${errmsg}`)
-
-                if (username) {
-                    return userMgr.authenticate(username, password)
-                        .then(user => {
-                            if (user) {
-                                token = jwt.sign({openid, user: user.id}, jwtSecret, defaultSignOptions)
-                                return sessionMgr.create({token, openid, userId: user.id, session_key})
-                                    .then(() => {
-                                        return userMgr.createWechatUser({id: user.id, openid})
-                                    })
-                                    .then((data) => {
-                                        return {user: data, token}
-                                    })
-                            }
-                            return
+                    if (username) {
+                        return userMgr.authenticate(username, password)
+                            .then(user => {
+                                if (user) {
+                                    token = jwt.sign({openid, user: user.id}, jwtSecret, defaultSignOptions)
+                                    return sessionMgr.create({token, openid, userId: user.id, session_key})
+                                        .then(() => {
+                                            return userMgr.createWechatUser({id: user.id, openid})
+                                        })
+                                        .then((data) => {
+                                            return {user: data, token}
+                                        })
+                                }
+                                return
+                            })
+                    }
+                    token = jwt.sign({openid}, jwtSecret, defaultSignOptions)
+                    return sessionMgr.create({token, openid, session_key})
+                        .then(() => {
+                            return userMgr.createWechatUser({openid})
                         })
-                }
-                token = jwt.sign({openid}, jwtSecret, defaultSignOptions)
-                return sessionMgr.create({token, openid, session_key})
-                    .then(() => {
-                        return userMgr.createWechatUser({openid})
+                        .then((user) => {
+                            return {user, token}
+                        })
+                })
+        } else {
+            let openid = code
+            let session_key = "222"
+            let errmsg = ""
+
+            if (errmsg) throw new Error(`Wechat login fail: ${errmsg}`)
+
+            if (username) {
+                return userMgr.authenticate(username, password)
+                    .then(user => {
+                        if (user) {
+                            token = jwt.sign({openid, user: user.id}, jwtSecret, defaultSignOptions)
+                            return sessionMgr.create({token, openid, userId: user.id, session_key})
+                                .then(() => {
+                                    return userMgr.createWechatUser({id: user.id, openid})
+                                })
+                                .then((data) => {
+                                    return {user: data, token}
+                                })
+                        }
+                        return
                     })
-                    .then((user) => {
-                        return {user, token}
-                    })
-            // })
+            }
+            token = jwt.sign({openid}, jwtSecret, defaultSignOptions)
+            return sessionMgr.create({token, openid, session_key})
+                .then(() => {
+                    return userMgr.createWechatUser({openid})
+                })
+                .then((user) => {
+                    return {user, token}
+                })
+        }
+
     },
     getUser: (id) => {
         return Promise.resolve({id})
