@@ -1,7 +1,7 @@
 /**
  *  报数排名
  */
-const entity = require('../biz/mygdh/Report');
+const entity = require('../biz/mygdh/ReportRank');
 
 const list = function (query) {
     let condi
@@ -11,7 +11,7 @@ const list = function (query) {
         condi = {}
     }
     let text
-    return entity.search(condi, text, {times: -1})
+    return entity.search(condi, text)
         .then(function (list) {
             return {
                 items: list

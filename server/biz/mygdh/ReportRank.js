@@ -6,7 +6,8 @@ const config = {
     projection: ['user', 'lessonIns', 'times', 'createdAt'],
     updatables: ['user', 'lessonIns', 'times', 'createdAt',],
     searchables: ['user', 'lessonIns', 'createdAt'],
-    listable: ['user', 'lessonIns', 'times', 'createdAt']
+    listable: ['user', 'lessonIns', 'times', 'createdAt'],
+    sort: {'times': -1}
 }
 
 const addIn = {}
