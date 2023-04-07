@@ -1,9 +1,9 @@
 /**
  * 当前课程实例
  */
-const entity = require('../biz/mygdh/Lesson')
-const subDocPath = 'instances'
-const logger = require('@finelets/hyper-rest/app/Logger')
+const entity = require('../biz/mygdh/Lesson'),
+    subDocPath = 'instances',
+    logger = require('@finelets/hyper-rest/app/Logger')
 
 const list = function (query) {
     let condi

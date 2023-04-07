@@ -1,8 +1,8 @@
 /**
  * 课程实例
  */
-const entity = require('../biz/mygdh/WxUser')
-const subDocPath = 'lessonIns'
+const entity = require('../biz/mygdh/WxUser'),
+    subDocPath = 'lessonIns'
 
 const list = function (query) {
     return entity.listSubs(query.id, subDocPath)
@@ -15,15 +15,14 @@ const list = function (query) {
 
 module.exports = {
     url: '/wx/api/myLesson/:id/inses',
-    transitions: {
-    },
+    transitions: {},
     rests: [{
-            type: 'create',
-            target: 'MyLessonIns',
-            handler: (req) => {
-                return entity.createSubDoc(req.params['id'], subDocPath, req.body)
-            }
-        },
+        type: 'create',
+        target: 'MyLessonIns',
+        handler: (req) => {
+            return entity.createSubDoc(req.params['id'], subDocPath, req.body)
+        }
+    },
         {
             type: 'query',
             element: 'MyLessonIns',

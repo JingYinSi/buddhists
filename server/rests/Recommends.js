@@ -1,7 +1,7 @@
 /**
  *  推荐
  */
-const entity = require('../biz/mygdh/Recommend');
+const entity = require('../biz/mygdh/Recommend')
 
 const list = function (query) {
     let condi

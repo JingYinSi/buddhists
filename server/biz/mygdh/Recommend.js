@@ -3,7 +3,7 @@ const schema = require('../../../db/schema/mygdh/Recommend'),
 
 const config = {
     schema,
-    projection: ['name'],
+    projection: ['name', 'pic', 'link', 'desc'],
     updatables: ['name', 'pic', 'link', 'desc', 'enable'],
     searchables: ['name'],
     listable: ['name']

@@ -7,7 +7,7 @@ const {
     update,
     remove,
     findById
-} = require('../biz/mygdh/Lesson');
+} = require('../biz/mygdh/Lesson')
 const logger = require('@finelets/hyper-rest/app/Logger')
 
 module.exports = {
@@ -16,10 +16,10 @@ module.exports = {
         LessonInstance: {id: 'context.Lesson'}
     },
     rests: [{
-            type: 'read',
-            ifNoneMatch,
-            handler: findById
-        },
+        type: 'read',
+        ifNoneMatch,
+        handler: findById
+    },
         {
             type: 'update',
             ifMatch,

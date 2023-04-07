@@ -1,4 +1,4 @@
-const entity = require('../biz/mygdh/WxUser');
+const entity = require('../biz/mygdh/WxUser')
 
 const list = function (query) {
     let condi
@@ -19,8 +19,7 @@ const list = function (query) {
 
 module.exports = {
     url: '/wx/api/auth/users',
-    transitions: {
-    },
+    transitions: {},
     rests: [{
         type: 'create',
         target: 'User',

@@ -5,7 +5,6 @@ module.exports = {
         lessons: 'Lessons',
         recommends: 'Recommends',
         reports: 'Reports',
-        currentUser: 'CurrentUser',
         currentLessonInstances: 'CurrentLessonInstances',
         myInfo: 'MyInfo'
     },

@@ -7,7 +7,7 @@ const {
     update,
     remove,
     findById
-} = require('../biz/mygdh/WxUser');
+} = require('../biz/mygdh/WxUser')
 
 module.exports = {
     url: '/wx/api/users/:id',

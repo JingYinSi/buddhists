@@ -29,7 +29,7 @@ const Appid = process.env.AppId,
     expiresIn = process.env.SessionExpiresIn
 const defaultSignOptions = {
     issuer: 'finelets',
-    expiresIn: "12h",
+    expiresIn: "720h",
     algorithm: "HS256"
 }
 defaultSignOptions.expiresIn = expiresIn || defaultSignOptions.expiresIn

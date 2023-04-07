@@ -1,8 +1,8 @@
 /**
  * 我的功课薄
  */
-const entity = require('../biz/mygdh/WxUser');
-const logger = require('@finelets/hyper-rest/app/Logger')
+const entity = require('../biz/mygdh/WxUser'),
+    logger = require('@finelets/hyper-rest/app/Logger')
 
 const findMyInfo = function (query, req) {
     // let openid = req.user.openid
@@ -12,15 +12,14 @@ const findMyInfo = function (query, req) {
     return entity.search(condi, text)
         .then(function (list) {
             let lessonInsCnt = list[0].lessonIns.length
-            return {lessonInsCnt ,...list[0]}
+            return {lessonInsCnt, ...list[0]}
         })
 };
 
 
 module.exports = {
     url: '/wx/api/myInfo',
-    transitions: {
-    },
+    transitions: {},
     rests: [
         {
             type: 'read',

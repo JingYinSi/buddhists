@@ -1,9 +1,10 @@
 /**
  * 课程实例跑马灯
  */
-const entity = require('../biz/mygdh/Report');
-const WxUserEntity = require('../biz/mygdh/WxUser');
-const logger = require('@finelets/hyper-rest/app/Logger')
+const entity = require('../biz/mygdh/Report'),
+    WxUserEntity = require('../biz/mygdh/WxUser'),
+    logger = require('@finelets/hyper-rest/app/Logger'),
+    mqPublish = require('@finelets/hyper-rest/mq')
 
 const list = function (query) {
     let condi = {"lessonIns": query.id}
@@ -43,6 +44,16 @@ module.exports = {
                 data.lessonIns = req.params['id']
                 data.reportDate = ''
                 return entity.create(req.body)
+                    .then(data => {
+                        const publish = mqPublish['reportCreated']
+                        return publish({
+                            times: data.times,
+                            user: data.user,
+                            lessonIns: data.lessonIns,
+                            id: data.id
+                        })
+
+                    })
             }
         },
         {

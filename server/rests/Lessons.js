@@ -1,7 +1,7 @@
 /**
  *  课程
  */
-const entity = require('../biz/mygdh/Lesson');
+const entity = require('../biz/mygdh/Lesson')
 
 const list = function (query) {
     let condi

@@ -7,7 +7,7 @@ const {
     update,
     remove,
     findById
-} = require('../biz/mygdh/Report');
+} = require('../biz/mygdh/Report')
 
 
 module.exports = {

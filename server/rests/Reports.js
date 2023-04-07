@@ -1,7 +1,8 @@
 /**
  *  报数
  */
-const entity = require('../biz/mygdh/Report');
+const entity = require('../biz/mygdh/Report'),
+    mqPublish = require('@finelets/hyper-rest/mq')
 
 const list = function (query) {
     let condi
@@ -22,12 +23,21 @@ const list = function (query) {
 module.exports = {
     url: '/wx/api/reports',
     rests: [{
-            type: 'create',
-            target: 'Report',
-            handler: (req) => {
-                return entity.create(req.body)
-            }
-        },
+        type: 'create',
+        target: 'Report',
+        handler: (req) => {
+            return entity.create(req.body)
+                .then(data => {
+                    const publish = mqPublish['reportCreated']
+                    return publish({
+                        times: data.times,
+                        user: data.user,
+                        lessonIns: data.lessonIns,
+                        id: data.id
+                    })
+                })
+        }
+    },
         {
             type: 'query',
             element: 'Report',

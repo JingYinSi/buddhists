@@ -7,7 +7,7 @@ const {
     update,
     remove,
     findById
-} = require('../biz/mygdh/Recommend');
+} = require('../biz/mygdh/Recommend')
 
 module.exports = {
     url: '/wx/api/recommends/:id',

@@ -1,7 +1,7 @@
 /**
  *  报数排名
  */
-const entity = require('../biz/mygdh/ReportRank');
+const entity = require('../biz/mygdh/ReportRank')
 
 const list = function (query) {
     let condi

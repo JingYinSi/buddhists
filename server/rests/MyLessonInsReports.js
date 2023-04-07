@@ -1,7 +1,7 @@
 /**
  *  我的功课报数
  */
-const entity = require('../biz/mygdh/Report');
+const entity = require('../biz/mygdh/Report')
 
 const list = function (query) {
     // let openid = req.user.openid

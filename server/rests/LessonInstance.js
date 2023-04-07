@@ -9,8 +9,8 @@ const {
     findSubDocById
 } = require('../biz/mygdh/Lesson')
 
-const subDocPath = 'instances'
-const logger = require('@finelets/hyper-rest/app/Logger')
+const subDocPath = 'instances',
+    logger = require('@finelets/hyper-rest/app/Logger')
 
 module.exports = {
     url: '/wx/api/lesson/instances/:id',
