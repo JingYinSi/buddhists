@@ -15,9 +15,11 @@ const obj = {
     updateLessonInstance: (msg) => {
         // return entity.findById("64266031ec16e55198335c8b").then(doc => {
         return entity.findSubDocById(msg.lessonIns, subDocPath).then(doc => {
-            doc.populations++
-            doc.todayPopulations++
-            doc.todayTimes += msg.times
+            doc.toUpdate= {
+                populations:doc.populations+1,
+                todayPopulations:doc.todayPopulations+1,
+                todayTimes:msg.times
+            }
             return entity.updateSubDoc(subDocPath, {...doc})
         }).catch(e => {
             if (e.name === 'CastError') return false
