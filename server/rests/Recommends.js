@@ -21,7 +21,7 @@ const list = function (query) {
 };
 
 module.exports = {
-    url: '/wx/api/recommends',
+    url: '/api/recommends',
     rests: [{
             type: 'create',
             target: 'Recommend',

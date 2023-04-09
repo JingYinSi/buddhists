@@ -12,7 +12,7 @@ const subDocPath = 'lessonIns',
     logger = require('@finelets/hyper-rest/app/Logger')
 
 module.exports = {
-    url: '/wx/api/myLesson/inses/:id',
+    url: '/api/myLesson/inses/:id',
     transitions: {},
     rests: [{
         type: 'read',

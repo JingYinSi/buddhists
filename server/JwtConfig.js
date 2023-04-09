@@ -18,8 +18,8 @@ const wxUserEntity = require('./biz/mygdh/WxUser'),
         ...DEFAULT_ADMIN_INFO
     }
 
-const baseUrl = '/wx/api',
-    loginUrl = '/wx/auth/login'
+const baseUrl = '/api',
+    loginUrl = '/api/auth/login'
 
 let __authenticate, __getUser, __haveAdmin
 let __wx_session_key

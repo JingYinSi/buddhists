@@ -14,7 +14,7 @@ const list = function (query) {
 }
 
 module.exports = {
-    url: '/wx/api/lesson/:id/instances',
+    url: '/api/lesson/:id/instances',
     transitions: {},
     rests: [{
         type: 'create',

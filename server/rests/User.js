@@ -10,7 +10,7 @@ const {
 } = require('../biz/mygdh/WxUser')
 
 module.exports = {
-    url: '/wx/api/users/:id',
+    url: '/api/users/:id',
     transitions: {
         Report: {id: 'context.user'}
     },

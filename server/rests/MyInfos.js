@@ -24,7 +24,7 @@ const list = function (query, req) {
 
 
 module.exports = {
-    url: '/wx/api/myInfos',
+    url: '/api/myInfos',
     transitions: {},
     rests: [
         {

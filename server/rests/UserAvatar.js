@@ -3,7 +3,7 @@ const picGridFs = require('../biz').PicGridFs,
     mqPublish = require('@finelets/hyper-rest/mq')
 
 module.exports = {
-    url: '/wx/api/users/:id/pic',
+    url: '/api/users/:id/pic',
     rests: [{
             type: 'upload',
             target: 'Avatar',

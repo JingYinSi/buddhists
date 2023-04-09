@@ -17,7 +17,7 @@ const list = function (query) {
 };
 
 module.exports = {
-    url: '/wx/api/myLesson/inses/:id/reports',
+    url: '/api/myLesson/inses/:id/reports',
     rests: [
         {
             type: 'query',

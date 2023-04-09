@@ -21,7 +21,7 @@ const list = function (query) {
 };
 
 module.exports = {
-    url: '/wx/api/lessons',
+    url: '/api/lessons',
     transitions: {
     },
     rests: [{

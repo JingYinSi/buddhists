@@ -42,7 +42,7 @@ function print_array(arr) {
 }
 
 module.exports = {
-    url: '/wx/api/lesson/instances/current',
+    url: '/api/lesson/instances/current',
     transitions: {},
     rests: [
         // {

@@ -10,7 +10,7 @@ const {
 } = require('../biz/mygdh/Recommend')
 
 module.exports = {
-    url: '/wx/api/recommends/:id',
+    url: '/api/recommends/:id',
     transitions: {
     },
     rests: [{

@@ -18,7 +18,7 @@ const list = function (query) {
 };
 
 module.exports = {
-    url: '/wx/api/auth/users',
+    url: '/api/auth/users',
     transitions: {},
     rests: [{
         type: 'create',

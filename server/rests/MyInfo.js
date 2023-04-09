@@ -10,7 +10,7 @@ const {
 } = require('../biz/mygdh/WxUser')
 
 module.exports = {
-    url: '/wx/api/myInfos/:id',
+    url: '/api/myInfos/:id',
     transitions: {
         MyLessonIns: {id: 'context.WxUser'}
     },

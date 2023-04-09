@@ -20,7 +20,7 @@ const list = function (query) {
 };
 
 module.exports = {
-    url: '/wx/api/lesson/instances/:id/reportsRank',
+    url: '/api/lesson/instances/:id/reportsRank',
     transitions: {
         LessonInstance: {id: 'context.id'}
     },

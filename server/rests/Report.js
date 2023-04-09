@@ -11,7 +11,7 @@ const {
 
 
 module.exports = {
-    url: '/wx/api/reports/:id',
+    url: '/api/reports/:id',
     transitions: {
         User: {id: 'context.user'}
     },

@@ -1,7 +1,7 @@
 const entity = require('../biz/mygdh/WxUser')
 
 module.exports = {
-    url: '/wx/auth/users',
+    url: '/api/auth/users',
     rests: [{
             type: 'create',
             target: 'User',

@@ -11,7 +11,7 @@ const {
 const logger = require('@finelets/hyper-rest/app/Logger')
 
 module.exports = {
-    url: '/wx/api/lessons/:id',
+    url: '/api/lessons/:id',
     transitions: {
         LessonInstance: {id: 'context.Lesson'}
     },

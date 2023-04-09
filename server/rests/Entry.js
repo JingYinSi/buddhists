@@ -1,5 +1,5 @@
 module.exports = {
-    url: '/wx/index.html',
+    url: '/api',
     rests: [
         {
             type: 'entry'

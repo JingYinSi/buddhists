@@ -5,7 +5,7 @@ const logger = require('@finelets/hyper-rest/app/Logger'),
     users = require('../biz').Employee
 
 module.exports = {
-    url: '/wx/api/auth/users/:id/roles',
+    url: '/api/auth/users/:id/roles',
     rests: [{
             type: 'http',
             method: 'put',
