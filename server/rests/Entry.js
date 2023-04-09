@@ -1,5 +1,5 @@
 module.exports = {
-    url: '/api',
+    url: '/index',
     rests: [
         {
             type: 'entry'
