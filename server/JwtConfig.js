@@ -75,7 +75,7 @@ const config = {
                 })
         }
 
-        if (process.env.RUNNING_MODE !== 'dev') {
+        if (process.env.RUNNING_MODE !== 'rest') {
             let url = `https://api.weixin.qq.com/sns/jscode2session?appid=${Appid}&secret=${AppSecret}&js_code=${code}&grant_type=authorization_code`
             return axios.get(url)
                 .then(res => {

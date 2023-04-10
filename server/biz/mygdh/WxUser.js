@@ -19,8 +19,8 @@ const schema = require('../../../db/schema/mygdh/WxUser'),
 const config = {
     schema,
     projection: {userId: 0, openid: 0},
-    updatables: ['userId', 'name', 'openid', 'pic'],
-    searchables: ['userId', 'name', 'openid', 'pic'],
+    updatables: ['userId', 'name', 'openid', 'pic', 'prov', 'city', 'district'],
+    searchables: ['userId', 'name', 'openid', 'pic', 'prov', 'city', 'district'],
     listable: {userId: 0, openid: 0},
     setValues: (doc, data) => {
     }
@@ -55,7 +55,7 @@ const obj = {
                 if (openid && openid.length >= 6) {
                     name = openid.substring(openid.length - 6)
                 }
-                return entity.create({userId: openid, name: name, openid: openid})
+                return entity.create({userId: openid, name: name, openid: openid, prov: '', city: '', district: ''})
             })
     },
 
