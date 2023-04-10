@@ -13,14 +13,13 @@ const config = {
 const entity = createEntity(config)
 const obj = {
     updateLessonInstance: (msg) => {
-        // return entity.findById("64266031ec16e55198335c8b").then(doc => {
         return entity.findSubDocById(msg.lessonIns, subDocPath).then(doc => {
-            doc.toUpdate= {
-                populations:doc.populations+1,
-                todayPopulations:doc.todayPopulations+1,
-                todayTimes:msg.times
+            doc.toUpdate = {
+                populations: doc.populations + 1,
+                todayPopulations: doc.todayPopulations + 1,
+                todayTimes: doc.todayTimes + msg.times
             }
-            return entity.updateSubDoc(subDocPath, {...doc})
+            return entity.updateSubDoc(subDocPath, doc)
         }).catch(e => {
             if (e.name === 'CastError') return false
             throw e

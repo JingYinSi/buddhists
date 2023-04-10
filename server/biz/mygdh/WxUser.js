@@ -1,6 +1,7 @@
 const schema = require('../../../db/schema/mygdh/WxUser'),
     createEntity = require('@finelets/hyper-rest/db/mongoDb/DbEntity'),
     mqPublish = require('@finelets/hyper-rest/mq'),
+    subDocPath = 'lessonIns',
     logger = require('@finelets/hyper-rest/app/Logger'),
 
     UNKNOWN_WECHAT_NAME = "Unknown Wechat User",
@@ -142,6 +143,41 @@ const obj = {
                     mqPublish['removePic'](oldPic)
                 }
             })
+    },
+    updateLessonInstance: (msg) => {
+        return entity.listSubs(msg.user, subDocPath).then(list => {
+            let doc
+            if (list) {
+                list.forEach(function (item) {
+                    if (msg.lessonIns == item.lessonInsId) {
+                        doc = item
+                    }
+                });
+            }
+            if (doc) {
+                doc.toUpdate = {
+                    days: doc.days + 1,
+                    dayTimes: doc.dayTimes + msg.times,
+                    weekTimes: doc.weekTimes + msg.times,
+                    monthTimes: doc.monthTimes + msg.times,
+                    totalTimes: doc.totalTimes + msg.times
+                }
+                return entity.updateSubDoc(subDocPath, {...doc})
+            } else {
+                doc = {
+                    lessonInsId: msg.lessonIns,
+                    days: 1,
+                    dayTimes: msg.times,
+                    weekTimes: msg.times,
+                    monthTimes: msg.times,
+                    totalTimes: msg.times
+                }
+                return entity.createSubDoc(msg.user, subDocPath, doc)
+            }
+        }).catch(e => {
+            if (e.name === 'CastError') return false
+            throw e
+        })
     }
 }
 

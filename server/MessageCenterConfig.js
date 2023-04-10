@@ -1,6 +1,7 @@
 const logger = require('@finelets/hyper-rest/app/Logger'),
     {Employee, PicGridFs} = require('./biz')
-const Lesson = require('./biz/mygdh/Lesson')
+const Lesson = require('./biz/mygdh/Lesson'),
+    WxUser = require('./biz/mygdh/WxUser')
 module.exports = {
     connect: process.env.MQ,
     exchanges: {
@@ -46,9 +47,14 @@ module.exports = {
                     topic: 'reportCreated',
                     consumer: (msg) => {
                         logger.debug(`handle message reportCreated: ${msg}`)
+                        // 累加课程功课总报数
                         return Lesson.updateLessonInstance(msg)
                             .then(() => {
-                                return true
+                                // 累加用户的功课报数
+                                return WxUser.updateLessonInstance(msg)
+                                    .then(() => {
+                                        return true
+                                    })
                             })
                             .catch(e => {
                                 return true
