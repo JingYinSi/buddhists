@@ -21,6 +21,7 @@
     "@finelets/hyper-rest": "file:../hyper-rest",
     "axios": "^1.3.5",
     "jsonwebtoken": "^9.0.0",
+    "moment": "^2.29.4",
     "mongoose": "^7.0.3",
     "underscore": "^1.13.6"
   },

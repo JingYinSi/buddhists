@@ -1,6 +1,7 @@
 module.exports = {
     Entry: {
         users: 'Users',
+        calender: 'Calendar',
         register: 'RegisterUser',
         lessons: 'Lessons',
         recommends: 'Recommends',
