@@ -23,7 +23,8 @@ module.exports = {
     Lesson: {
         self: 'Lesson',
         collection: 'Lessons',
-        instances: 'LessonInstances'
+        instances: 'LessonInstances',
+        pic: 'Avatar'
     },
     LessonInstances: {
         add: 'LessonInstances',

@@ -4,15 +4,19 @@ module.exports = {
     url: '/api/pictures/:id',
     transitions: {
         UserAvatar: {id: 'context.id'},
-        User: {id: 'context'}
+        User: {id: 'context'},
+        Lesson: {id: 'context.pic'}
     },
     rests: [{
         type: 'http',
         method: 'get',
         handler: (req, res) => {
             const {id} = req.params
+            //去掉默认的json头，展示图片
+            res.removeHeader('Content-Type')
             const ds = picGridFs.openDownloadStream(id)
             ds.on('data', (data) => {
+
                 res.write(data)
             })
             ds.on('end', () => {
