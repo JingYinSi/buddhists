@@ -1,7 +1,7 @@
 const picGridFs = require('../biz').PicGridFs
 
 module.exports = {
-    url: '/api/pictures/:id',
+    url: '/pictures/:id',
     transitions: {
         UserAvatar: {id: 'context.id'},
         User: {id: 'context'},
