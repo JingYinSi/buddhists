@@ -19,7 +19,7 @@ const obj = {
                 todayPopulations: doc.todayPopulations + 1,
                 todayTimes: doc.todayTimes + msg.times
             }
-            return entity.updateSubDoc(subDocPath, {...doc})
+            return entity.updateSubDoc(subDocPath, doc)
         }).catch(e => {
             if (e.name === 'CastError') return false
             throw e
