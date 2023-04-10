@@ -7,7 +7,7 @@ const entity = require('../biz/mygdh/WxUser'),
 const list = function (query, req) {
     let openid
     if (process.env.RUNNING_MODE === 'rest') {
-        openid = 'eeeeeeee'
+        openid = '0a1Pk00w3LJdq03U021w3UeRpW1Pk00n'
     } else {
         openid = req.user.openid
     }
