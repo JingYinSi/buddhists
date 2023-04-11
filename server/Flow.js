@@ -59,6 +59,7 @@ module.exports = {
     },
     Recommend: {
         self: 'Recommend',
+        pic : 'Avatar',
         collection: 'Recommends'
     },
     Reports: {
