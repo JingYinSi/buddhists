@@ -129,6 +129,17 @@ const obj = {
             })
     },
 
+    updatePrayerText: (_id, {oldPrayerText, prayerText}) => {
+        return schema.updateOne({_id, password: oldPrayerText}, {$set: {prayerText}})
+            .then(data => {
+                return data.n === 1 && data.nModified === 1 && data.ok === 1
+            })
+            .catch(e => {
+                if (e.name === 'CastError') return false
+                throw e
+            })
+    },
+
     updatePic: (id, pic) => {
         let oldPic
 
