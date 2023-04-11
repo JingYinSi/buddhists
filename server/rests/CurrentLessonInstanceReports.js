@@ -1,5 +1,5 @@
 /**
- * 课程实例跑马灯
+ * 课程实例跑马灯 及 当前功课用户报数
  */
 const entity = require('../biz/mygdh/Report'),
     WxUserEntity = require('../biz/mygdh/WxUser'),
