@@ -56,7 +56,7 @@ const obj = {
                 if (openid && openid.length >= 6) {
                     name = openid.substring(openid.length - 6)
                 }
-                return entity.create({userId: openid, name: name, openid: openid, prov: '', city: '', district: ''})
+                return entity.create({userId: openid, name: name, openid: openid, prov: '', city: '', district: '', pic: '64351a9c1bee875cc0cac898'})
             })
     },
 

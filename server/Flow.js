@@ -77,6 +77,7 @@ module.exports = {
         self: 'MyInfo',
         lessonIns: 'MyLessonInses',
         prayerText : 'MyInfoPrayerText',
+        getAvatar : 'Avatar',
         avatar : 'UserAvatar',
         collection: 'MyInfos'
     },

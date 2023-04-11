@@ -5,7 +5,8 @@ module.exports = {
     transitions: {
         UserAvatar: {id: 'context.id'},
         User: {id: 'context'},
-        Lesson: {id: 'context.pic'}
+        Lesson: {id: 'context.pic'},
+        MyInfo: {id: 'context.pic'}
     },
     rests: [{
         type: 'http',
