@@ -1,5 +1,5 @@
 const logger = require('@finelets/hyper-rest/app/Logger'),
-    {Employee, PicGridFs} = require('./biz')
+    PicGridFs = require('./biz').PicGridFs
 const Lesson = require('./biz/mygdh/Lesson'),
     WxUser = require('./biz/mygdh/WxUser')
 module.exports = {
@@ -8,20 +8,37 @@ module.exports = {
         wx: {
             isDefault: true,
             publishes: [
-                'employeePicChanged',
+                'wxUserPicChanged',
                 'removePic',
                 'apply',
-                'reportCreated'
+                'reportCreated',
+                'lessonPicChanged',
             ],
             queues: {
-                EmployeePicChanged: {
-                    topic: 'employeePicChanged',
+                WxUserPicChanged: {
+                    topic: 'wxUserPicChanged',
                     consumer: ({
                                    id,
                                    pic
                                }) => {
-                        logger.debug(`handle message employeePicChanged: {id: ${id}, pic: ${pic}}`)
-                        return Employee.updatePic(id, pic)
+                        logger.debug(`handle message wxUserPicChanged: {id: ${id}, pic: ${pic}}`)
+                        return WxUser.updatePic(id, pic)
+                            .then(() => {
+                                return true
+                            })
+                            .catch(e => {
+                                return true
+                            })
+                    }
+                },
+                LessonPicChanged: {
+                    topic: 'lessonPicChanged',
+                    consumer: ({
+                                   id,
+                                   pic
+                               }) => {
+                        logger.debug(`handle message lessonPicChanged: {id: ${id}, pic: ${pic}}`)
+                        return Lesson.updatePic(id, pic)
                             .then(() => {
                                 return true
                             })

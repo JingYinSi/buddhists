@@ -1,16 +1,16 @@
 const picGridFs = require('../biz').PicGridFs,
-    entity = require('../biz/mygdh/WxUser'),
+    entity = require('../biz/mygdh/Lesson'),
     mqPublish = require('@finelets/hyper-rest/mq')
 
 module.exports = {
-    url: '/api/users/:id/pic',
+    url: '/api/lessons/:id/pic',
     rests: [{
             type: 'upload',
             target: 'Avatar',
             handler: (file, fileName, req) => {
                 return picGridFs.upload(file, fileName)
                     .then(id => {
-                        const publish = mqPublish['wxUserPicChanged']
+                        const publish = mqPublish['lessonPicChanged']
                         publish({
                             id: req.params.id,
                             pic: id

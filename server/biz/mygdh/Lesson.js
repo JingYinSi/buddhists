@@ -12,6 +12,21 @@ const config = {
 
 const entity = createEntity(config)
 const obj = {
+    updatePic: (id, pic) => {
+        let oldPic
+
+        return schema.findById(id)
+            .then(doc => {
+                oldPic = doc.pic
+                doc.pic = pic
+                return doc.save()
+            })
+            .then(() => {
+                if (oldPic) {
+                    mqPublish['removePic'](oldPic)
+                }
+            })
+    },
     updateLessonInstance: (msg) => {
         return entity.findSubDocById(msg.lessonIns, subDocPath).then(doc => {
             doc.toUpdate = {
