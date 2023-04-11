@@ -40,7 +40,7 @@ module.exports = {
                     .then(function (list) {
                         data.user = list[0].id
                         data.lessonIns = req.params['id']
-                        data.reportDate = ''
+                        data.reportDate = new Date().toLocaleDateString('zh').replaceAll('/', '')
                         return entity.create(req.body)
                             .then(data => {
                                 const publish = mqPublish['reportCreated']

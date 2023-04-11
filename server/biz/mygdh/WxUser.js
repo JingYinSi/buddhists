@@ -2,6 +2,7 @@ const schema = require('../../../db/schema/mygdh/WxUser'),
     createEntity = require('@finelets/hyper-rest/db/mongoDb/DbEntity'),
     mqPublish = require('@finelets/hyper-rest/mq'),
     subDocPath = 'lessonIns',
+    reportEntity = require('./Report'),
     logger = require('@finelets/hyper-rest/app/Logger'),
 
     UNKNOWN_WECHAT_NAME = "Unknown Wechat User",
@@ -155,6 +156,22 @@ const obj = {
                     mqPublish['removePic'](oldPic)
                 }
             })
+    },
+    updateUserLesson: (msg) => {
+        return schema.findById(msg.user).then(doc => {
+            let reportDate = new Date().toLocaleDateString('zh').replaceAll('/', '')
+            let condi = {'user': msg.user, 'reportDate': reportDate, 'lessonIns': msg.lessonIns}
+            let text
+            return reportEntity.search(condi, text)
+                .then(function (list) {
+                    //用户功课第一次报数 累加报数天数
+                    if (list.length == 0) {
+                        doc.dayLessonInsNumber = doc.dayLessonInsNumber + 1
+                        doc.lessonDays = doc.lessonDays + 1
+                        return doc.save()
+                    }
+                })
+        })
     },
     updateLessonInstance: (msg) => {
         return entity.listSubs(msg.user, subDocPath).then(list => {

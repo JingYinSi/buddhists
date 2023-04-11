@@ -67,10 +67,14 @@ module.exports = {
                         // 累加课程功课总报数
                         return Lesson.updateLessonInstance(msg)
                             .then(() => {
-                                // 累加用户的功课报数
-                                return WxUser.updateLessonInstance(msg)
+                                // 累加用户的功课完成天数
+                                return WxUser.updateUserLesson(msg)
                                     .then(() => {
-                                        return true
+                                        // 累加用户的功课报数
+                                        return WxUser.updateLessonInstance(msg)
+                                            .then(() => {
+                                                return true
+                                            })
                                     })
                             })
                             .catch(e => {
