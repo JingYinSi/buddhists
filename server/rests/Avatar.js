@@ -6,7 +6,8 @@ module.exports = {
         UserAvatar: {id: 'context.id'},
         User: {id: 'context'},
         Lesson: {id: 'context.pic'},
-        MyInfo: {id: 'context.pic'}
+        MyInfo: {id: 'context.pic'},
+        Recommend: {id: 'context.pic'}
     },
     rests: [{
         type: 'http',
