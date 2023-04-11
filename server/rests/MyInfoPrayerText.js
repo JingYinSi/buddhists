@@ -1,5 +1,5 @@
 /**
- * Created by clx on 2017/10/13.
+ * 更新我的回向文
  */
 const logger = require('@finelets/hyper-rest/app/Logger'),
     users = require('../biz/mygdh/WxUser')
