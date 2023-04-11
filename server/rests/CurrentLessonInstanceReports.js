@@ -29,7 +29,7 @@ module.exports = {
                 const data = req.body
                 let openid
                 if (process.env.RUNNING_MODE === 'rest') {
-                    openid = '666666'
+                    openid = '0a1Pk00w3LJdq03U021w3UeRpW1Pk00n'
                 } else {
                     if (!req.user || !data) {
                         return res.status(403).end()
