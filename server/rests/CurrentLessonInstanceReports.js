@@ -36,7 +36,7 @@ module.exports = {
                     }
                     openid = req.user.openid
                 }
-                return WxUserEntity.search({"openid": openid})
+                return WxUserEntity.search({'openid': openid})
                     .then(function (list) {
                         data.user = list[0].id
                         data.lessonIns = req.params['id']

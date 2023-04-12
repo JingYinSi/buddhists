@@ -1,7 +1,8 @@
 /**
  *  我的功课报数
  */
-const entity = require('../biz/mygdh/Report')
+const entity = require('../biz/mygdh/Report'),
+    WxUserEntity = require('../biz/mygdh/WxUser')
 
 const list = function (query, req) {
     let openid
@@ -10,18 +11,26 @@ const list = function (query, req) {
     } else {
         openid = req.user.openid
     }
-    let condi = {'lessonIns': query.id, user: openid}
-    let text
-    return entity.search(condi, text)
+
+    return WxUserEntity.search({'openid': openid})
         .then(function (list) {
-            return {
-                items: list
-            }
+            let user = list[0].id
+            let condi = {'lessonIns': query.id, 'user': user}
+            let text
+            return entity.search(condi, text)
+                .then(function (list) {
+                    return {
+                        items: list
+                    }
+                })
         })
 };
 
 module.exports = {
     url: '/api/myLesson/inses/:id/reports',
+    transitions: {
+        MyLessonIns: {id: 'context.lessonInsId'}
+    },
     rests: [
         {
             type: 'query',
