@@ -2,7 +2,7 @@
  *  我的功课报数
  */
 const entity = require('../biz/mygdh/Report'),
-    WxUserEntity = require('../biz/mygdh/WxUser'),
+    wxUserEntity = require('../biz/mygdh/WxUser'),
     moment = require('moment')
 
 const list = function (query, req) {
@@ -13,7 +13,7 @@ const list = function (query, req) {
         openid = req.user.openid
     }
 
-    return WxUserEntity.search({'openid': openid})
+    return wxUserEntity.search({'openid': openid})
         .then(function (list) {
             let user = list[0].id
             let condi = {'lessonIns': query.id, 'user': user}

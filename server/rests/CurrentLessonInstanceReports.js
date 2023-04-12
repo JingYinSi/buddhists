@@ -2,7 +2,7 @@
  * 课程实例跑马灯 及 当前功课用户报数
  */
 const entity = require('../biz/mygdh/Report'),
-    WxUserEntity = require('../biz/mygdh/WxUser'),
+    wxUserEntity = require('../biz/mygdh/WxUser'),
     logger = require('@finelets/hyper-rest/app/Logger'),
     mqPublish = require('@finelets/hyper-rest/mq'),
     moment = require('moment')
@@ -37,7 +37,7 @@ module.exports = {
                     }
                     openid = req.user.openid
                 }
-                return WxUserEntity.search({'openid': openid})
+                return wxUserEntity.search({'openid': openid})
                     .then(function (list) {
                         data.user = list[0].id
                         data.lessonIns = req.params['id']
