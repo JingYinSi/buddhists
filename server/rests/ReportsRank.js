@@ -1,7 +1,8 @@
 /**
  *  报数排名
  */
-const entity = require('../biz/mygdh/ReportRank')
+const entity = require('../biz/mygdh/ReportRank'),
+    moment = require('moment')
 
 const list = function (query) {
     let condi
@@ -12,8 +13,7 @@ const list = function (query) {
     }
     //默认查询当天
     if (!condi.reportDate) {
-        let reportDate = new Date().toLocaleDateString('zh').replaceAll('/', '')
-        condi.reportDate = reportDate
+        condi.reportDate =  moment().format('yyyyMMDD')
     }
     let text
     return entity.search(condi, text)

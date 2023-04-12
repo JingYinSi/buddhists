@@ -4,7 +4,8 @@
 const entity = require('../biz/mygdh/Report'),
     WxUserEntity = require('../biz/mygdh/WxUser'),
     logger = require('@finelets/hyper-rest/app/Logger'),
-    mqPublish = require('@finelets/hyper-rest/mq')
+    mqPublish = require('@finelets/hyper-rest/mq'),
+    moment = require('moment')
 
 const list = function (query) {
     let condi = {"lessonIns": query.id}
@@ -40,7 +41,7 @@ module.exports = {
                     .then(function (list) {
                         data.user = list[0].id
                         data.lessonIns = req.params['id']
-                        data.reportDate = new Date().toLocaleDateString('zh').replaceAll('/', '')
+                        data.reportDate = moment().format('yyyyMMDD')
                         return entity.create(req.body)
                             .then(data => {
                                 const publish = mqPublish['reportCreated']

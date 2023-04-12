@@ -2,7 +2,8 @@
  *  我的功课报数
  */
 const entity = require('../biz/mygdh/Report'),
-    WxUserEntity = require('../biz/mygdh/WxUser')
+    WxUserEntity = require('../biz/mygdh/WxUser'),
+    moment = require('moment')
 
 const list = function (query, req) {
     let openid
@@ -19,8 +20,17 @@ const list = function (query, req) {
             let text
             return entity.search(condi, text)
                 .then(function (list) {
-                    return {
-                        items: list
+                    if (list) {
+                        let formatDay = moment().format('yyyy-MM-DD HH:mm')
+                        let newList = list.map(item => {
+                            return {
+                                ...item,
+                                createdAt: formatDay
+                            }
+                        })
+                        return {
+                            items: newList
+                        }
                     }
                 })
         })

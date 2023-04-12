@@ -3,6 +3,7 @@ const schema = require('../../../db/schema/mygdh/WxUser'),
     mqPublish = require('@finelets/hyper-rest/mq'),
     subDocPath = 'lessonIns',
     reportEntity = require('./Report'),
+    moment = require('moment'),
     logger = require('@finelets/hyper-rest/app/Logger'),
 
     UNKNOWN_WECHAT_NAME = "Unknown Wechat User",
@@ -159,7 +160,7 @@ const obj = {
     },
     updateUserLesson: (msg) => {
         return schema.findById(msg.user).then(doc => {
-            let reportDate = new Date().toLocaleDateString('zh').replaceAll('/', '')
+            let reportDate = moment().format('yyyyMMDD')
             let condi = {'user': msg.user, 'reportDate': reportDate, 'lessonIns': msg.lessonIns}
             let text
             return reportEntity.search(condi, text)

@@ -22,7 +22,6 @@ const list = function (query) {
                 })
             })
             return Promise.all(promises).then(function (values) {
-                // print_array(values)
                 return {
                     items: values
                 }
@@ -30,28 +29,10 @@ const list = function (query) {
         })
 }
 
-//打印数组
-function print_array(arr) {
-    for (var key in arr) {
-        if (typeof (arr[key]) == 'array' || typeof (arr[key]) == 'object') {//递归调用
-            print_array(arr[key]);
-        } else {
-            logger.error("xxxxL:" + key + ' = ' + arr[key] + '<br>');
-        }
-    }
-}
-
 module.exports = {
     url: '/api/lesson/instances/current',
     transitions: {},
     rests: [
-        // {
-        //     type: 'create',
-        //     target: 'LessonInstance',
-        //     handler: (req) => {
-        //         return entity.createSubDoc(req.params['id'], subDocPath, req.body)
-        //     }
-        // },
         {
             type: 'query',
             element: 'LessonInstance',
