@@ -180,8 +180,11 @@ const obj = {
                         doc.dayLessonInsNumber = doc.dayLessonInsNumber + 1
                     }
                     return lessonEntity.findSubDocById(msg.lessonIns, lessonSubDocPath).then(lessonInsDoc => {
-                        if (lessonInsDoc && lessonInsDoc.target && lessonInsDoc.target >= 1 && msg.times >= 1) {
-                            let reportPopulations = Math.ceil(msg.times / lessonInsDoc.target)
+                        if (lessonInsDoc && msg.times >= 1) {
+                            let reportPopulations = 1
+                            if (lessonInsDoc.target && lessonInsDoc.target >= 1){
+                                reportPopulations = Math.ceil(msg.times / lessonInsDoc.target)
+                            }
                             // 累加完成功课天数
                             doc.lessonDays = doc.lessonDays + reportPopulations
                             return doc.save()
@@ -203,8 +206,11 @@ const obj = {
             }
             if (doc) {
                 return lessonEntity.findSubDocById(msg.lessonIns, subDocPath).then(lessonInsDoc => {
-                    if (lessonInsDoc && lessonInsDoc.target && lessonInsDoc.target >= 1 && msg.times >= 1) {
-                        let reportPopulations = Math.ceil(msg.times / lessonInsDoc.target)
+                    if (lessonInsDoc && msg.times >= 1) {
+                        let reportPopulations = 1
+                        if (lessonInsDoc.target && lessonInsDoc.target >= 1){
+                            reportPopulations = Math.ceil(msg.times / lessonInsDoc.target)
+                        }
                         doc.toUpdate = {
                             days: doc.days + reportPopulations,
                             dayTimes: doc.dayTimes + msg.times,
