@@ -5,9 +5,9 @@ module.exports = {
     transitions: {
         UserAvatar: {id: 'context.id'},
         User: {id: 'context'},
-        Lesson: {id: 'context.pic'},
-        MyInfo: {id: 'context.pic'},
-        Recommend: {id: 'context.pic'}
+        Lesson: {id: 'context'},
+        MyInfo: {id: 'context'},
+        Recommend: {id: 'context'}
     },
     rests: [{
         type: 'http',

@@ -25,8 +25,7 @@ module.exports = {
     Lesson: {
         self: 'Lesson',
         collection: 'Lessons',
-        instances: 'LessonInstances',
-        pic: 'Avatar'
+        instances: 'LessonInstances'
     },
     LessonInstances: {
         add: 'LessonInstances',
@@ -59,7 +58,6 @@ module.exports = {
     },
     Recommend: {
         self: 'Recommend',
-        pic : 'Avatar',
         collection: 'Recommends'
     },
     Reports: {
@@ -78,7 +76,6 @@ module.exports = {
         self: 'MyInfo',
         lessonIns: 'MyLessonInses',
         prayerText : 'MyInfoPrayerText',
-        getAvatar : 'Avatar',
         avatar : 'UserAvatar',
         collection: 'MyInfos'
     },

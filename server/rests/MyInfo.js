@@ -17,6 +17,7 @@ module.exports = {
     rests: [{
             type: 'read',
             ifNoneMatch,
+            dataRef: {Avatar: 'pic'},
             handler: (id) => {
                 return findById(id).then(doc => {
                     let lessonInsCnt = doc.lessonIns.length
