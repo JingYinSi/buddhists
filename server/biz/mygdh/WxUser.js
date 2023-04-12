@@ -165,7 +165,7 @@ const obj = {
             return reportEntity.search(condi, text)
                 .then(function (list) {
                     //用户功课第一次报数 累加报数天数
-                    if (list.length == 0) {
+                    if (list.length <= 1) {
                         doc.dayLessonInsNumber = doc.dayLessonInsNumber + 1
                         doc.lessonDays = doc.lessonDays + 1
                         return doc.save()
