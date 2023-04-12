@@ -2,6 +2,10 @@ const schema = require('../../../db/schema/mygdh/WxUser'),
     createEntity = require('@finelets/hyper-rest/db/mongoDb/DbEntity'),
     mqPublish = require('@finelets/hyper-rest/mq'),
     subDocPath = 'lessonIns',
+    reportEntity = require('./Report'),
+    lessonEntity = require('./Lesson'),
+    lessonSubDocPath = 'instances',
+    moment = require('moment'),
     logger = require('@finelets/hyper-rest/app/Logger'),
 
     UNKNOWN_WECHAT_NAME = "Unknown Wechat User",
@@ -56,7 +60,15 @@ const obj = {
                 if (openid && openid.length >= 6) {
                     name = openid.substring(openid.length - 6)
                 }
-                return entity.create({userId: openid, name: name, openid: openid, prov: '', city: '', district: '', pic: '64351a9c1bee875cc0cac898'})
+                return entity.create({
+                    userId: openid,
+                    name: name,
+                    openid: openid,
+                    prov: '',
+                    city: '',
+                    district: '',
+                    pic: '64351a9c1bee875cc0cac898'
+                })
             })
     },
 
@@ -150,16 +162,39 @@ const obj = {
                 return doc.save()
             })
             .then(() => {
-                // 不删除默认头像64351a9c1bee875cc0cac898
-                if (oldPic && oldPic !== '64351a9c1bee875cc0cac898') {
+                // 不删除默认头像
+                if (oldPic && oldPic !== process.env.USER_DEFAULT_AVATAR) {
                     mqPublish['removePic'](oldPic)
                 }
             })
+    },
+    updateUserLesson: (msg) => {
+        return schema.findById(msg.user).then(doc => {
+            let reportDate = moment().format('yyyyMMDD')
+            let condi = {'user': msg.user, 'reportDate': reportDate, 'lessonIns': msg.lessonIns}
+            let text
+            return reportEntity.search(condi, text)
+                .then(function (list) {
+                    // 用户功课第一次报数 累加今日报数（几门功课）
+                    if (list.length <= 1) {
+                        doc.dayLessonInsNumber = doc.dayLessonInsNumber + 1
+                    }
+                    return lessonEntity.findSubDocById(msg.lessonIns, lessonSubDocPath).then(lessonInsDoc => {
+                        if (lessonInsDoc && lessonInsDoc.target && lessonInsDoc.target >= 1 && msg.times >= 1) {
+                            let reportPopulations = Math.ceil(msg.times / lessonInsDoc.target)
+                            // 累加完成功课天数
+                            doc.lessonDays = doc.lessonDays + reportPopulations
+                            return doc.save()
+                        }
+                    });
+                })
+        })
     },
     updateLessonInstance: (msg) => {
         return entity.listSubs(msg.user, subDocPath).then(list => {
             let doc
             if (list) {
+                //遍历找到本次报数的功课
                 list.forEach(function (item) {
                     if (msg.lessonIns == item.lessonInsId) {
                         doc = item
@@ -167,14 +202,19 @@ const obj = {
                 });
             }
             if (doc) {
-                doc.toUpdate = {
-                    days: doc.days + 1,
-                    dayTimes: doc.dayTimes + msg.times,
-                    weekTimes: doc.weekTimes + msg.times,
-                    monthTimes: doc.monthTimes + msg.times,
-                    totalTimes: doc.totalTimes + msg.times
-                }
-                return entity.updateSubDoc(subDocPath, {...doc})
+                return lessonEntity.findSubDocById(msg.lessonIns, subDocPath).then(lessonInsDoc => {
+                    if (lessonInsDoc && lessonInsDoc.target && lessonInsDoc.target >= 1 && msg.times >= 1) {
+                        let reportPopulations = Math.ceil(msg.times / lessonInsDoc.target)
+                        doc.toUpdate = {
+                            days: doc.days + reportPopulations,
+                            dayTimes: doc.dayTimes + msg.times,
+                            weekTimes: doc.weekTimes + msg.times,
+                            monthTimes: doc.monthTimes + msg.times,
+                            totalTimes: doc.totalTimes + msg.times
+                        }
+                    }
+                    return entity.updateSubDoc(subDocPath, {...doc})
+                });
             } else {
                 doc = {
                     lessonInsId: msg.lessonIns,

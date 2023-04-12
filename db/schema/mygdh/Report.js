@@ -8,7 +8,7 @@ const dbModel = createCollection({
         user: {type: ObjectId, required: true},
         lessonIns: {type: ObjectId, required: true},
         times: {type: Number, default: 0},
-        reportDate: Date
+        reportDate: {type: String}
     },
     indexes: [
         {
