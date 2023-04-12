@@ -39,7 +39,8 @@ module.exports = {
         lesson: 'Lesson',
         report: 'CurrentLessonInstanceReports',
         reports: 'CurrentLessonInstanceReports',
-        reportsRank: 'ReportsRank'
+        reportsRank: 'ReportsRank',
+        dayTimesRand: 'UserLessonInstanceDayRank'
     },
     CurrentLessonInstanceReports: {
         self: 'CurrentLessonInstanceReports',
