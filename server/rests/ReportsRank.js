@@ -10,6 +10,11 @@ const list = function (query) {
     } catch (e) {
         condi = {}
     }
+    //默认查询当天
+    if (!condi.reportDate) {
+        let reportDate = new Date().toLocaleDateString('zh').replaceAll('/', '')
+        condi.reportDate = reportDate
+    }
     let text
     return entity.search(condi, text)
         .then(function (list) {
