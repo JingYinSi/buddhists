@@ -151,8 +151,8 @@ const obj = {
                 return doc.save()
             })
             .then(() => {
-                // 不删除默认头像64351a9c1bee875cc0cac898
-                if (oldPic && oldPic !== '64351a9c1bee875cc0cac898') {
+                // 不删除默认头像
+                if (oldPic && oldPic !== process.env.USER_DEFAULT_AVATAR) {
                     mqPublish['removePic'](oldPic)
                 }
             })

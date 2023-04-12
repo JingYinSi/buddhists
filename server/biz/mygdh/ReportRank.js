@@ -7,7 +7,8 @@ const config = {
     updatables: ['user', 'lessonIns', 'times', 'createdAt',],
     searchables: ['user', 'lessonIns', 'createdAt'],
     listable: ['user', 'lessonIns', 'times', 'createdAt'],
-    sort: {'times': -1}
+    sort: {'times': -1},
+    'queryListLinesLimit': 10
 }
 
 const addIn = {}
