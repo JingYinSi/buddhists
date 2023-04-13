@@ -8,6 +8,7 @@ const instanceSchema = createSchema({
     start: Date,
     end: Date,
     target: {type: Number, default: 0},
+    totalTarget: {type: Number, default: 0},
     populations: {type: Number, default: 0},
     todayPopulations: {type: Number, default: 0},
     todayTimes: {type: Number, default: 0}
@@ -20,6 +21,7 @@ const dbModel = createCollection({
         title: {type: String, required: true},
         pic: {type: String, required: true},
         desc: String,
+        sortNo:{type:Number,default:0},
         instances: [instanceSchema]
     },
     indexes: [{
