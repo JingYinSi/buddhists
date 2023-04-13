@@ -14,7 +14,7 @@ const list = function (query, req) {
     }
 
     return wxUserEntity.search({'openid': openid})
-        .then(function (list) {
+        .then(list => {
             let user = list[0].id
             let condi = {'lessonIns': query.id, 'user': user}
             let text

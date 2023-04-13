@@ -15,13 +15,13 @@ const list = function (query) {
     let text = query.s ? query.s : '.'
     text = text.length > 0 ? text : '.'
     return entity.search(condi, text)
-        .then(function (list) {
-            let promises = list.map(function (item) {
+        .then(list => {
+            let promises = list.map(item => {
                 return entity.listSubs(item.id, subDocPath).then(data => {
                     return data[0]
                 })
             })
-            return Promise.all(promises).then(function (values) {
+            return Promise.all(promises).then(values => {
                 return {
                     items: values
                 }
