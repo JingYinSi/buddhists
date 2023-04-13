@@ -4,10 +4,11 @@ const schema = require('../../../db/schema/mygdh/Lesson'),
     {extend} = require('underscore')
 const config = {
     schema,
-    projection: ['name', 'title', 'pic', 'desc'],
-    updatables: ['name', 'title', 'pic', 'desc'],
+    projection: ['name', 'title', 'pic', 'sortNo', 'desc'],
+    updatables: ['name', 'title', 'pic', 'sortNo', 'desc'],
     searchables: ['name', 'title', 'desc'],
-    listable: ['name']
+    listable: ['name'],
+    sort: {'sortNo': 1}
 }
 
 const entity = createEntity(config)
