@@ -21,7 +21,7 @@ const list = function (query) {
                 })
             })
             return Promise.all(promises).then(values => {
-                let sortValues = lodash(values).sortBy(x => x.sortNo.toString());
+                let sortValues = lodash(values).sortBy(x => x.sortNo)
                 return {
                     items: sortValues
                 }
