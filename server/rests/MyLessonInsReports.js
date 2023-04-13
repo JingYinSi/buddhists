@@ -21,8 +21,8 @@ const list = function (query, req) {
             return entity.search(condi, text)
                 .then(function (list) {
                     if (list) {
-                        let formatDay = moment().format('yyyy-MM-DD HH:mm')
                         let newList = list.map(item => {
+                            let formatDay = moment(item.createdAt).format('yyyy-MM-DD HH:mm')
                             return {
                                 ...item,
                                 createdAt: formatDay
