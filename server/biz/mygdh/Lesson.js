@@ -30,8 +30,11 @@ const obj = {
     },
     updateLessonInstance: (msg) => {
         return entity.findSubDocById(msg.lessonIns, subDocPath).then(doc => {
-            if (doc && doc.target && doc.target >= 1 && msg.times >= 1) {
-                let reportPopulations = Math.ceil(msg.times / doc.target)
+            if (doc && msg.times >= 1) {
+                let reportPopulations = 1
+                if (doc.target && doc.target >= 1){
+                    reportPopulations = Math.ceil(msg.times / doc.target)
+                }
                 doc.toUpdate = {
                     populations: doc.populations + reportPopulations,
                     todayPopulations: doc.todayPopulations + reportPopulations,
