@@ -205,7 +205,7 @@ const obj = {
                 });
             }
             if (doc) {
-                return lessonEntity.findSubDocById(msg.lessonIns, subDocPath).then(lessonInsDoc => {
+                return lessonEntity.findSubDocById(msg.lessonIns, lessonSubDocPath).then(lessonInsDoc => {
                     if (lessonInsDoc && msg.times >= 1) {
                         let reportPopulations = 1
                         if (lessonInsDoc.target && lessonInsDoc.target >= 1) {
