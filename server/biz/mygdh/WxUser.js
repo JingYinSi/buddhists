@@ -199,7 +199,7 @@ const obj = {
             if (list) {
                 //遍历找到本次报数的功课
                 list.forEach(function (item) {
-                    if (msg.lessonIns == item.lessonInsId) {
+                    if (msg.lessonIns === item.lessonInsId) {
                         doc = item
                     }
                 });
