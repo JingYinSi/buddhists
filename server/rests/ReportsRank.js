@@ -11,6 +11,9 @@ const list = function (query) {
     } catch (e) {
         condi = {}
     }
+    if (query.id) {
+        condi.lessonIns = query.id
+    }
     //默认查询当天
     if (!condi.reportDate) {
         condi.reportDate =  moment().format('yyyyMMDD')
