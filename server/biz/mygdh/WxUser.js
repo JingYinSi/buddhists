@@ -182,7 +182,7 @@ const obj = {
                     return lessonEntity.findSubDocById(msg.lessonIns, lessonSubDocPath).then(lessonInsDoc => {
                         if (lessonInsDoc && msg.times >= 1) {
                             let reportPopulations = 1
-                            if (lessonInsDoc.target && lessonInsDoc.target >= 1){
+                            if (lessonInsDoc.target && lessonInsDoc.target >= 1) {
                                 reportPopulations = Math.ceil(msg.times / lessonInsDoc.target)
                             }
                             // 累加完成功课天数
@@ -208,7 +208,7 @@ const obj = {
                 return lessonEntity.findSubDocById(msg.lessonIns, subDocPath).then(lessonInsDoc => {
                     if (lessonInsDoc && msg.times >= 1) {
                         let reportPopulations = 1
-                        if (lessonInsDoc.target && lessonInsDoc.target >= 1){
+                        if (lessonInsDoc.target && lessonInsDoc.target >= 1) {
                             reportPopulations = Math.ceil(msg.times / lessonInsDoc.target)
                         }
                         doc.toUpdate = {
@@ -236,6 +236,46 @@ const obj = {
             if (e.name === 'CastError') return false
             throw e
         })
+    },
+    resetUserLesson: (jobParam) => {
+        return schema.updateMany({dayLessonInsNumber: {$gte: 0}}, {$set: {dayLessonInsNumber: 0}})
+            .catch(e => {
+                if (e.name === 'CastError') return false
+                throw e
+            })
+    },
+    resetUserLessonIns: (jobParam) => {
+        return schema.find().then((list) => {
+            list.forEach(item => {
+                return entity.listSubs(item.id, subDocPath).then(lessonIns => {
+                    lessonIns.map(lessonInsItem => {
+                        if (jobParam.flag === 'day' && lessonInsItem && lessonInsItem.days >= 1) {
+                            lessonInsItem.toUpdate = {
+                                days: 0,
+                                dayTimes: 0
+                            }
+                            return entity.updateSubDoc(subDocPath, lessonInsItem)
+                        }
+                        if (jobParam.flag === 'week' && lessonInsItem && lessonInsItem.weekTimes >= 1) {
+                            lessonInsItem.toUpdate = {
+                                weekTimes: 0
+                            }
+                            return entity.updateSubDoc(subDocPath, lessonInsItem)
+                        }
+                        if (jobParam.flag === 'month' && lessonInsItem && lessonInsItem.monthTimes >= 1) {
+                            lessonInsItem.toUpdate = {
+                                monthTimes: 0
+                            }
+                            return entity.updateSubDoc(subDocPath, lessonInsItem)
+                        }
+                    })
+                })
+            })
+        })
+            .catch(e => {
+                if (e.name === 'CastError') return false
+                throw e
+            })
     }
 }
 
