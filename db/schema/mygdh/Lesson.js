@@ -19,6 +19,7 @@ const dbModel = createCollection({
     schema: {
         name: {type: String, required: true},
         title: {type: String, required: true},
+        icon: {type: String, required: true},
         pic: {type: String, required: true},
         desc: String,
         sortNo:{type:Number,default:0},

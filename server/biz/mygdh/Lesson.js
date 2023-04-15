@@ -6,8 +6,8 @@ const schema = require('../../../db/schema/mygdh/Lesson'),
     {extend} = require('underscore')
 const config = {
     schema,
-    projection: ['name', 'title', 'pic', 'sortNo', 'desc'],
-    updatables: ['name', 'title', 'pic', 'sortNo', 'desc'],
+    projection: ['name', 'title', 'pic', 'icon', 'sortNo', 'desc'],
+    updatables: ['name', 'title', 'pic', 'icon', 'sortNo', 'desc'],
     searchables: ['name', 'title', 'desc'],
     listable: ['name'],
     sort: {'sortNo': 1}
@@ -27,6 +27,21 @@ const obj = {
             .then(() => {
                 if (oldPic) {
                     mqPublish['removePic'](oldPic)
+                }
+            })
+    },
+    updateIcon: (id, icon) => {
+        let oldIcon
+
+        return schema.findById(id)
+            .then(doc => {
+                oldIcon = doc.icon
+                doc.icon = icon
+                return doc.save()
+            })
+            .then(() => {
+                if (oldIcon) {
+                    mqPublish['removePic'](oldIcon)
                 }
             })
     },
