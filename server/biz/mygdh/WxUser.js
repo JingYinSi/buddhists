@@ -247,28 +247,36 @@ const obj = {
     resetUserLessonIns: (jobParam) => {
         return schema.find().then((list) => {
             list.forEach(item => {
-                return entity.listSubs(item.id, subDocPath).then(lessonIns => {
-                    lessonIns.map(lessonInsItem => {
-                        if (jobParam.flag === 'day' && lessonInsItem && lessonInsItem.days >= 1) {
-                            lessonInsItem.toUpdate = {
+                entity.listSubs(item.id, subDocPath).then(lessonIns => {
+                    if (lessonIns.length > 0) {
+                        // 行子文档所有subid
+                        let lessonInsItemIds = []
+                        let lessonInsItemLast
+                        lessonIns.forEach(lessonInsItem => {
+                            lessonInsItemIds.push(lessonInsItem.id)
+                            lessonInsItemLast = lessonInsItem
+                        })
+                        if (jobParam.flag === 'day' && lessonInsItemLast) {
+                            lessonInsItemLast.toUpdate = {
                                 days: 0,
                                 dayTimes: 0
                             }
-                            return entity.updateSubDoc(subDocPath, lessonInsItem)
+                            return entity.updateManySubDoc(subDocPath, lessonInsItemLast, lessonInsItemIds)
                         }
-                        if (jobParam.flag === 'week' && lessonInsItem && lessonInsItem.weekTimes >= 1) {
-                            lessonInsItem.toUpdate = {
+                        if (jobParam.flag === 'week' && lessonInsItemLast) {
+                            lessonInsItemLast.toUpdate = {
                                 weekTimes: 0
                             }
-                            return entity.updateSubDoc(subDocPath, lessonInsItem)
+                            return entity.updateManySubDoc(subDocPath, lessonInsItemLast, lessonInsItemIds)
                         }
-                        if (jobParam.flag === 'month' && lessonInsItem && lessonInsItem.monthTimes >= 1) {
-                            lessonInsItem.toUpdate = {
+                        if (jobParam.flag === 'month' && lessonInsItemLast) {
+                            lessonInsItemLast.toUpdate = {
                                 monthTimes: 0
                             }
-                            return entity.updateSubDoc(subDocPath, lessonInsItem)
+                            return entity.updateManySubDoc(subDocPath, lessonInsItemLast, lessonInsItemIds)
                         }
-                    })
+                    }
+
                 })
             })
         })

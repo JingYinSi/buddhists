@@ -85,16 +85,23 @@ const obj = {
     resetLessonIns: (jobParam) => {
         return schema.find().then((list) => {
             list.forEach(item => {
-                return entity.listSubs(item.id, subDocPath).then(lessonIns => {
-                    lessonIns.map(lessonInsItem => {
-                        if (lessonInsItem && lessonInsItem.todayPopulations >= 1) {
-                            lessonInsItem.toUpdate = {
+                entity.listSubs(item.id, subDocPath).then(lessonIns => {
+                    if (lessonIns.length > 0) {
+                        // 行子文档所有subid
+                        let lessonInsItemIds = []
+                        let lessonInsItemLast
+                        lessonIns.forEach(lessonInsItem => {
+                            lessonInsItemIds.push(lessonInsItem.id)
+                            lessonInsItemLast = lessonInsItem
+                        })
+                        if (lessonInsItemLast) {
+                            lessonInsItemLast.toUpdate = {
                                 todayPopulations: 0,
                                 todayTimes: 0
                             }
-                            return entity.updateSubDoc(subDocPath, lessonInsItem)
+                            return entity.updateManySubDoc(subDocPath, lessonInsItemLast, lessonInsItemIds)
                         }
-                    })
+                    }
                 })
             })
         })

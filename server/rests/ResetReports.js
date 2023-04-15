@@ -12,10 +12,10 @@ module.exports = {
         type: 'http',
         method: 'put',
         handler: (req, res) => {
-            if (req.body.flag === 'day') {
-                lessonEntity.resetLessonIns(req.body)
-                wxUserEntity.resetUserLesson(req.body)
-            }
+
+            lessonEntity.resetLessonIns(req.body)
+
+            wxUserEntity.resetUserLesson(req.body)
 
             return wxUserEntity.resetUserLessonIns(req.body)
                 .then(ok => {

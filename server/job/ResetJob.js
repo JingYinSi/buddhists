@@ -5,7 +5,7 @@ const schedule = require('node-schedule'),
 // const url = `http://127.0.0.1:9505/job/reset/reports`
 const url = `https://wx.mygdh.top/job/reset/reports`
 
-const dayJob = schedule.scheduleJob('0,10,20,30,40,50 0,1 0 * * *', async function () {
+const dayJob = schedule.scheduleJob('0,10,20 0 * * * *', async function () {
     logger.info('dayJob 开始执行')
     try {
         await axios.put(url, {'flag': 'day'})
@@ -18,7 +18,7 @@ const dayJob = schedule.scheduleJob('0,10,20,30,40,50 0,1 0 * * *', async functi
     }
 })
 
-const weekJob = schedule.scheduleJob('5,15,25,35,45,55 0,1 0 * * 1', async function () {
+const weekJob = schedule.scheduleJob('30,40 0 0 * * 1', async function () {
     logger.info('weekJob 开始执行')
     try {
         await axios.put(url, {'flag': 'week'})
@@ -31,7 +31,7 @@ const weekJob = schedule.scheduleJob('5,15,25,35,45,55 0,1 0 * * 1', async funct
     }
 })
 
-const monthJob = schedule.scheduleJob('8,18,28,38,48,58 0,1 0 1 * *', async function () {
+const monthJob = schedule.scheduleJob('50,55 0 0 1 * *', async function () {
     logger.info('job 开始执行')
     try {
         await axios.put(url, {'flag': 'month'})
