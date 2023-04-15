@@ -1,6 +1,8 @@
 const schema = require('../../../db/schema/mygdh/Lesson'),
     createEntity = require('@finelets/hyper-rest/db/mongoDb/DbEntity'),
     subDocPath = 'instances',
+    reportEntity = require('./Report'),
+    moment = require('moment'),
     {extend} = require('underscore')
 const config = {
     schema,
@@ -46,16 +48,34 @@ const obj = {
     updateLessonInstance: (msg) => {
         return entity.findSubDocById(msg.lessonIns, subDocPath).then(doc => {
             if (doc && msg.times >= 1) {
-                let reportPopulations = 1
-                if (doc.target && doc.target >= 1) {
-                    reportPopulations = Math.ceil(msg.times / doc.target)
-                }
-                doc.toUpdate = {
-                    populations: doc.populations + reportPopulations,
-                    todayPopulations: doc.todayPopulations + reportPopulations,
-                    todayTimes: doc.todayTimes + msg.times
-                }
-                return entity.updateSubDoc(subDocPath, doc)
+                let condi = {'user': msg.user, 'lessonIns': msg.lessonIns}
+                let text
+                return reportEntity.search(condi, text)
+                    .then(function (list) {
+                        // 用户第一次报功课，总报数人数+1
+                        let reportPopulations = 1
+                        if (list.length >= 2) {
+                            reportPopulations = 0
+                        }
+
+                        let reportDate = moment().format('yyyyMMDD')
+                        condi = {'user': msg.user, 'reportDate': reportDate, 'lessonIns': msg.lessonIns}
+                        return reportEntity.search(condi, text)
+                            .then(function (todayList) {
+                                //用户 当天第一次报功课，今日报数人数+1
+                                let todayReportPopulations = 1
+                                if (todayList.length >= 2) {
+                                    todayReportPopulations = 0
+                                }
+                                doc.toUpdate = {
+                                    populations: doc.populations + reportPopulations,
+                                    todayPopulations: doc.todayPopulations + todayReportPopulations,
+                                    todayTimes: doc.todayTimes + msg.times
+                                }
+                                return entity.updateSubDoc(subDocPath, doc)
+                            })
+
+                    })
             }
         }).catch(e => {
             if (e.name === 'CastError') return false
