@@ -47,7 +47,7 @@ const obj = {
         return entity.findSubDocById(msg.lessonIns, subDocPath).then(doc => {
             if (doc && msg.times >= 1) {
                 let reportPopulations = 1
-                if (doc.target && doc.target >= 1){
+                if (doc.target && doc.target >= 1) {
                     reportPopulations = Math.ceil(msg.times / doc.target)
                 }
                 doc.toUpdate = {
@@ -61,6 +61,27 @@ const obj = {
             if (e.name === 'CastError') return false
             throw e
         })
+    },
+    resetLessonIns: (jobParam) => {
+        return schema.find().then((list) => {
+            list.forEach(item => {
+                return entity.listSubs(item.id, subDocPath).then(lessonIns => {
+                    lessonIns.map(lessonInsItem => {
+                        if (lessonInsItem && lessonInsItem.todayPopulations >= 1) {
+                            lessonInsItem.toUpdate = {
+                                todayPopulations: 0,
+                                todayTimes: 0
+                            }
+                            return entity.updateSubDoc(subDocPath, lessonInsItem)
+                        }
+                    })
+                })
+            })
+        })
+            .catch(e => {
+                if (e.name === 'CastError') return false
+                throw e
+            })
     }
 }
 
