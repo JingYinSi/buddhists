@@ -2,7 +2,8 @@ const schedule = require('node-schedule'),
     logger = require('@finelets/hyper-rest/app/Logger'),
     axios = require('axios')
 
-const url = `http://127.0.0.1:9505/job/reset/reports`
+// const url = `http://127.0.0.1:9505/job/reset/reports`
+const url = `https://wx.mygdh.top/job/reset/reports`
 
 const dayJob = schedule.scheduleJob('0,10,20,30,40,50 0,1 0 * * *', async function () {
     logger.info('dayJob 开始执行')
