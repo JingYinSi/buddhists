@@ -3,11 +3,7 @@ const picGridFs = require('../biz').PicGridFs
 module.exports = {
     url: '/pictures/:id',
     transitions: {
-        UserAvatar: {id: 'context.id'},
-        User: {id: 'context'},
-        Lesson: {id: 'context'},
-        MyInfo: {id: 'context'},
-        Recommend: {id: 'context'}
+        Lesson: {id: 'context'}
     },
     rests: [{
         type: 'http',
