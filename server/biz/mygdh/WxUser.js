@@ -258,7 +258,6 @@ const obj = {
                         })
                         if (jobParam.flag === 'day' && lessonInsItemLast) {
                             lessonInsItemLast.toUpdate = {
-                                days: 0,
                                 dayTimes: 0
                             }
                             return entity.updateManySubDoc(subDocPath, lessonInsItemLast, lessonInsItemIds)
