@@ -21,7 +21,7 @@ db.lessons.find().forEach(function (lesson) {
 //endregion
 
 //#region user lesson instance days state
-const yesterday = {
+let yesterday = {
     date: function () {
         let now = new Date();
         now.setDate(now.getDate() - 1);
@@ -48,11 +48,32 @@ db.reports.aggregate([
         $group: {_id: {"user": "$user", "lessonInsId": "$lessonIns"}, times: {$sum: "$times"}}
     }
 ]).forEach(function (item) {
-    db.wxusers.find({_id: item._id.user, "lessonIns._id": item._id.lessonInsId}).forEach(function (user) {
+    //console.log('yesterdayLessonTimes:')
+    //console.log(JSON.stringify(item))
+
+    db.wxusers.find({_id: ObjectId(item._id.user), "lessonIns.lessonInsId": ObjectId(item._id.lessonInsId)}).forEach(function (user) {
+        console.log('.............................start.............................')
+        //console.log('user:')
+        //console.log(JSON.stringify(user))
+        //console.log(user.lessonIns.length)
         user.lessonIns.forEach(function (userLessonInstance) {
-            let lessones = db.lessons.find({"instances._id": item._id.lessonInsId});
-            if (lessones.length <= 0 || lessones[0].instances.length <= 0) return;
-            let lesson = lessones[0], lessonInstance = lesson.instances[0];
+            if(!userLessonInstance.lessonInsId.equals(item._id.lessonInsId)) {
+                //console.log(item._id.lessonInsId)
+                //console.log(userLessonInstance.lessonInsId)
+                return;
+            }
+            //console.log('userLessonInstance:')
+            //console.log(JSON.stringify(userLessonInstance))
+            let lesson = db.lessons.findOne({"instances._id": ObjectId(item._id.lessonInsId)});
+
+            if(!lesson) return;
+
+            //console.log('lesson:')
+            //console.log(JSON.stringify(lesson))
+
+            lessonInstance= lesson.instances[0]
+            //console.log('lessonInstance:')
+            //console.log(JSON.stringify(lessonInstance))
 
             let newLessonDays = 1;
             if (userLessonInstance.target && userLessonInstance.target > 0) {
@@ -60,10 +81,15 @@ db.reports.aggregate([
             } else if (lessonInstance.target && lessonInstance.target > 0) {
                 newLessonDays = Math.ceil(item.times / lessonInstance.target)
             }
-
-            userLessonInstance.lessonDays = userLessonInstance.lessonDays + newLessonDays;
-            db.wxusers.updateOne({_id: user._id}, {$set: user})
+            //console.log('newLessonDays:' + newLessonDays)
+            if(!userLessonInstance.lessonDays) {
+                userLessonInstance.lessonDays = 0
+            }
+            userLessonInstance.lessonDays += newLessonDays;
+            //console.log('lessonDays:' + userLessonInstance.lessonDays)
         })
+        db.wxusers.updateOne({_id: user._id}, {$set: user})
+        //console.log('.............................end.............................')
     })
 })
 //#endregion
