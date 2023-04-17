@@ -50,14 +50,14 @@ db.reports.aggregate([
 ]).forEach(function (item) {
     db.wxusers.find({_id: item._id.user,"lessonIns._id":item._id.lessonInsId}).forEach(function (user) {
         let lesson = user.lessonIns[0]
-        let lessonInstance = lesson.instances[0];
+        let lessonInstance = lesson.lessonIns[0];
         let newLessonDays = 1;
         if (lessonInstance.target && lessonInstance.target > 0) {
-            newLessonDays = Math.ceil(item.times / lessonIns.target)
+            newLessonDays = Math.ceil(item.times / lessonInstance.target)
         } else if (lesson.target && lesson.target > 0) {
             newLessonDays = Math.ceil(item.times / lesson.target)
         }
-        lessonIns.lessonDays = lessonIns.lessonDays + newLessonDays;
+        lessonInstance.lessonDays = lessonInstance.lessonDays + newLessonDays;
         db.wxusers.updateOne({_id: user._id}, {$set: user})
     })
 })
