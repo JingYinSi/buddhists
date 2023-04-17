@@ -208,12 +208,7 @@ const obj = {
             if (doc) {
                 return lessonEntity.findSubDocById(msg.lessonIns, lessonSubDocPath).then(lessonInsDoc => {
                     if (lessonInsDoc && msg.times >= 1) {
-                        let reportPopulations = 1
-                        if (lessonInsDoc.target && lessonInsDoc.target >= 1) {
-                            reportPopulations = Math.ceil(msg.times / lessonInsDoc.target)
-                        }
-                        doc.toUpdate = {
-                            days: doc.days + reportPopulations,
+                       doc.toUpdate = {
                             dayTimes: doc.dayTimes + msg.times,
                             weekTimes: doc.weekTimes + msg.times,
                             monthTimes: doc.monthTimes + msg.times,
