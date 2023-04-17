@@ -1,5 +1,7 @@
 //////day job //////////////////////
 //init lesson instances state data
+
+//#region dayTime to 0 every day
 db.wxusers.find().forEach(function(user){
     user.lessonIns.forEach(function(lessonIns){
         lessonIns.dayTimes=0
@@ -16,3 +18,47 @@ db.lessons.find().forEach(function(lesson){
     })
     db.lessons.updateOne({_id:lesson._id},{$set:lesson})
 })
+//endregion
+
+//#region user lesson instance days state
+const yesterday = {
+    date: function () {
+        let now = new Date();
+        now.setDate(now.getDate() - 1);
+        return now;
+    },
+    begin: function () {
+        return new Date(this.date().setHours(0, 0, 0, 0));
+    },
+    end: function () {
+        return new Date(this.date().setHours(23, 59, 59, 999));
+    }
+};
+
+db.reports.aggregate([
+    {
+        $match: {
+            "createdAt": {
+                $gte: yesterday.begin(),
+                $lte: yesterday.end()
+            }
+        }
+    },
+    {
+        $group: {_id: {"user": "$user", "lessonInsId": "$lessonIns"}, times: {$sum: "$times"}}
+    }
+]).forEach(function (item) {
+    db.wxusers.find({_id: item._id.user,"lessonIns._id":item._id.lessonInsId}).forEach(function (user) {
+        let lesson = user.lessonIns[0]
+        let lessonInstance = lesson.instances[0];
+        let newLessonDays = 1;
+        if (lessonInstance.target && lessonInstance.target > 0) {
+            newLessonDays = Math.ceil(item.times / lessonIns.target)
+        } else if (lesson.target && lesson.target > 0) {
+            newLessonDays = Math.ceil(item.times / lesson.target)
+        }
+        lessonIns.lessonDays = lessonIns.lessonDays + newLessonDays;
+        db.wxusers.updateOne({_id: user._id}, {$set: user})
+    })
+})
+//#endregion
