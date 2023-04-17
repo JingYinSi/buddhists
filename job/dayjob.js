@@ -52,7 +52,7 @@ db.reports.aggregate([
     //console.log(JSON.stringify(item))
 
     db.wxusers.find({_id: ObjectId(item._id.user), "lessonIns.lessonInsId": ObjectId(item._id.lessonInsId)}).forEach(function (user) {
-        console.log('.............................start.............................')
+        //console.log('.............................start.............................')
         //console.log('user:')
         //console.log(JSON.stringify(user))
         //console.log(user.lessonIns.length)
