@@ -20,6 +20,7 @@ db.lessons.find().forEach(function (lesson) {
 })
 //endregion
 
+
 //#region user lesson instance days state
 let yesterday = {
     date: function () {
@@ -82,10 +83,11 @@ db.reports.aggregate([
                 newLessonDays = Math.ceil(item.times / lessonInstance.target)
             }
             //console.log('newLessonDays:' + newLessonDays)
-            if(!userLessonInstance.lessonDays) {
-                userLessonInstance.lessonDays = 0
-            }
-            userLessonInstance.lessonDays += newLessonDays;
+            if(!userLessonInstance.days) userLessonInstance.days = 0
+            userLessonInstance.days += newLessonDays
+
+            if(!user.lessonDays) user.lessonDays = 0
+            user.lessonDays+= newLessonDays
             //console.log('lessonDays:' + userLessonInstance.lessonDays)
         })
         db.wxusers.updateOne({_id: user._id}, {$set: user})
