@@ -178,18 +178,19 @@ const obj = {
                     // 用户功课第一次报数 累加今日报数（几门功课）
                     if (list.length <= 1) {
                         doc.dayLessonInsNumber = doc.dayLessonInsNumber + 1
+                        return doc.save()
                     }
-                    return lessonEntity.findSubDocById(msg.lessonIns, lessonSubDocPath).then(lessonInsDoc => {
-                        if (lessonInsDoc && msg.times >= 1) {
-                            let reportPopulations = 1
-                            if (lessonInsDoc.target && lessonInsDoc.target >= 1) {
-                                reportPopulations = Math.ceil(msg.times / lessonInsDoc.target)
-                            }
-                            // 累加完成功课天数
-                            doc.lessonDays = doc.lessonDays + reportPopulations
-                            return doc.save()
-                        }
-                    });
+                    // return lessonEntity.findSubDocById(msg.lessonIns, lessonSubDocPath).then(lessonInsDoc => {
+                    //     if (lessonInsDoc && msg.times >= 1) {
+                    //         let reportPopulations = 1
+                    //         if (lessonInsDoc.target && lessonInsDoc.target >= 1) {
+                    //             reportPopulations = Math.ceil(msg.times / lessonInsDoc.target)
+                    //         }
+                    //         // 累加完成功课天数
+                    //         doc.lessonDays = doc.lessonDays + reportPopulations
+                    //         return doc.save()
+                    //     }
+                    // });
                 })
         })
     },
