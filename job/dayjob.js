@@ -2,21 +2,21 @@
 //init lesson instances state data
 
 //#region dayTime to 0 every day
-db.wxusers.find().forEach(function(user){
-    user.lessonIns.forEach(function(lessonIns){
-        lessonIns.dayTimes=0
+db.wxusers.find().forEach(function (user) {
+    user.lessonIns.forEach(function (lessonIns) {
+        lessonIns.dayTimes = 0
     })
-    user.dayLessonInsNumber=0
-    db.wxusers.updateOne({_id:user._id},{$set:user})
+    user.dayLessonInsNumber = 0
+    db.wxusers.updateOne({_id: user._id}, {$set: user})
 })
 
 //init lesson instance state data
-db.lessons.find().forEach(function(lesson){
-    lesson.instances.forEach(function(instance){
-        instance.todayPopulations=0
-        instance.todayTimes=0
+db.lessons.find().forEach(function (lesson) {
+    lesson.instances.forEach(function (instance) {
+        instance.todayPopulations = 0
+        instance.todayTimes = 0
     })
-    db.lessons.updateOne({_id:lesson._id},{$set:lesson})
+    db.lessons.updateOne({_id: lesson._id}, {$set: lesson})
 })
 //endregion
 
@@ -48,17 +48,22 @@ db.reports.aggregate([
         $group: {_id: {"user": "$user", "lessonInsId": "$lessonIns"}, times: {$sum: "$times"}}
     }
 ]).forEach(function (item) {
-    db.wxusers.find({_id: item._id.user,"lessonIns._id":item._id.lessonInsId}).forEach(function (user) {
-        let lesson = user.lessonIns[0]
-        let lessonInstance = lesson.lessonIns[0];
-        let newLessonDays = 1;
-        if (lessonInstance.target && lessonInstance.target > 0) {
-            newLessonDays = Math.ceil(item.times / lessonInstance.target)
-        } else if (lesson.target && lesson.target > 0) {
-            newLessonDays = Math.ceil(item.times / lesson.target)
-        }
-        lessonInstance.lessonDays = lessonInstance.lessonDays + newLessonDays;
-        db.wxusers.updateOne({_id: user._id}, {$set: user})
+    db.wxusers.find({_id: item._id.user, "lessonIns._id": item._id.lessonInsId}).forEach(function (user) {
+        user.lessonIns.forEach(function (userLessonInstance) {
+            let lessones = db.lessons.find({"instances._id": item._id.lessonInsId});
+            if(lessones.length<=0 || lessones[0].instances.length<=0) return;
+            let lesson = lessones[0],lessonInstance = lesson.instances[0];
+            
+            let newLessonDays = 1;
+            if (lessonInstance.target && lessonInstance.target > 0) {
+                newLessonDays = Math.ceil(item.times / lessonInstance.target)
+            } else if (lesson.target && lesson.target > 0) {
+                newLessonDays = Math.ceil(item.times / lesson.target)
+            }
+
+            lessonInstance.lessonDays = lessonInstance.lessonDays + newLessonDays;
+            db.wxusers.updateOne({_id: user._id}, {$set: user})
+        })
     })
 })
 //#endregion
