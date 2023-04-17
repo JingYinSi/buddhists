@@ -53,7 +53,7 @@ db.reports.aggregate([
             let lessones = db.lessons.find({"instances._id": item._id.lessonInsId});
             if(lessones.length<=0 || lessones[0].instances.length<=0) return;
             let lesson = lessones[0],lessonInstance = lesson.instances[0];
-            
+
             let newLessonDays = 1;
             if (lessonInstance.target && lessonInstance.target > 0) {
                 newLessonDays = Math.ceil(item.times / lessonInstance.target)
