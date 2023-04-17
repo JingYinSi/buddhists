@@ -67,7 +67,7 @@ const obj = {
                     prov: '',
                     city: '',
                     district: '',
-                    pic: '64351a9c1bee875cc0cac898'
+                    pic: process.env.USER_DEFAULT_AVATAR
                 })
             })
     },
@@ -220,7 +220,7 @@ const obj = {
             } else {
                 doc = {
                     lessonInsId: msg.lessonIns,
-                    days: 1,
+                    days: 0,
                     dayTimes: msg.times,
                     weekTimes: msg.times,
                     monthTimes: msg.times,
