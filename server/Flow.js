@@ -8,6 +8,7 @@ module.exports = {
         reports: 'Reports',
         currentLessonInstances: 'CurrentLessonInstances',
         currentRecommends: 'CurrentRecommends',
+        suggest: 'Suggestions',
         myInfos: 'MyInfos'
     },
     Users: {
