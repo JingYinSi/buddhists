@@ -10,6 +10,7 @@ const instanceSchema = createSchema({
     target: {type: Number, default: 0},
     totalTarget: {type: Number, default: 0},
     populations: {type: Number, default: 0},
+    times: {type: Number, default: 0},
     todayPopulations: {type: Number, default: 0},
     todayTimes: {type: Number, default: 0}
 })

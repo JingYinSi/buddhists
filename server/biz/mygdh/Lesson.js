@@ -6,8 +6,8 @@ const schema = require('../../../db/schema/mygdh/Lesson'),
     {extend} = require('underscore')
 const config = {
     schema,
-    projection: ['name', 'title', 'pic', 'icon','incantation', 'sortNo', 'desc'],
-    updatables: ['name', 'title', 'pic', 'icon','incantation', 'sortNo', 'desc'],
+    projection: ['name', 'title', 'pic', 'icon', 'incantation', 'sortNo', 'desc'],
+    updatables: ['name', 'title', 'pic', 'icon', 'incantation', 'sortNo', 'desc'],
     searchables: ['name', 'title', 'desc'],
     listable: ['name'],
     sort: {'sortNo': 1}
@@ -82,8 +82,11 @@ const obj = {
                                 if (todayList.length >= 2) {
                                     todayReportPopulations = 0
                                 }
+                                if (!doc.times) doc.times = 0
+
                                 doc.toUpdate = {
                                     populations: doc.populations + reportPopulations,
+                                    times: doc.times + msg.times,
                                     todayPopulations: doc.todayPopulations + todayReportPopulations,
                                     todayTimes: doc.todayTimes + msg.times
                                 }
