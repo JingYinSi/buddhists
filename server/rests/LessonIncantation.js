@@ -3,14 +3,14 @@ const picGridFs = require('../biz').PicGridFs,
     mqPublish = require('@finelets/hyper-rest/mq')
 
 module.exports = {
-    url: '/api/lessons/:id/icon',
+    url: '/api/lessons/:id/incantation',
     rests: [{
             type: 'upload',
             target: 'Avatar',
             handler: (file, fileName, req) => {
                 return picGridFs.upload(file, fileName)
                     .then(id => {
-                        const publish = mqPublish['lessonIconChanged']
+                        const publish = mqPublish['lessonIncantationChanged']
                         publish({
                             id: req.params.id,
                             icon: id
@@ -24,7 +24,7 @@ module.exports = {
         {
             type: 'delete',
             handler: (id) => {
-                return entity.updateIcon(id)
+                return entity.updateIncantation(id)
                     .then(() => {
                         return true
                     })

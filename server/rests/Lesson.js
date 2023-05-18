@@ -18,7 +18,7 @@ module.exports = {
     rests: [{
         type: 'read',
         ifNoneMatch,
-        dataRef: {Avatar: 'pic',IconAvatar:'icon'},
+        dataRef: {Avatar: 'pic', IconAvatar: 'icon', IncantationAvatar: 'incantation'},
         handler: findById
     },
         {

@@ -13,7 +13,8 @@ module.exports = {
                 'apply',
                 'reportCreated',
                 'lessonPicChanged',
-                'lessonIconChanged'
+                'lessonIconChanged',
+                'lessonIncantationChanged'
             ],
             queues: {
                 WxUserPicChanged: {
@@ -56,6 +57,22 @@ module.exports = {
                                }) => {
                         logger.debug(`handle message lessonIconChanged: {id: ${id}, icon: ${icon}}`)
                         return Lesson.updateIcon(id, icon)
+                            .then(() => {
+                                return true
+                            })
+                            .catch(e => {
+                                return true
+                            })
+                    }
+                },
+                lessonIncantationChanged: {
+                    topic: 'lessonIncantationChanged',
+                    consumer: ({
+                                   id,
+                                   icon
+                               }) => {
+                        logger.debug(`handle message lessonIncantationChanged: {id: ${id}, icon: ${icon}}`)
+                        return Lesson.updateIncantation(id, icon)
                             .then(() => {
                                 return true
                             })

@@ -21,6 +21,7 @@ const dbModel = createCollection({
         title: {type: String, required: true},
         icon: {type: String, required: true},
         pic: {type: String, required: true},
+        incantation: {type: String, required: true},
         desc: String,
         sortNo:{type:Number,default:0},
         instances: [instanceSchema]
