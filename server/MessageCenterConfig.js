@@ -1,7 +1,8 @@
 const logger = require('@finelets/hyper-rest/app/Logger'),
     PicGridFs = require('./biz').PicGridFs
 const Lesson = require('./biz/mygdh/Lesson'),
-    WxUser = require('./biz/mygdh/WxUser')
+    WxUser = require('./biz/mygdh/WxUser'),
+    recommend= require("./biz/mygdh/Recommend")
 module.exports = {
     connect: process.env.MQ,
     exchanges: {
@@ -14,7 +15,8 @@ module.exports = {
                 'reportCreated',
                 'lessonPicChanged',
                 'lessonIconChanged',
-                'lessonIncantationChanged'
+                'lessonIncantationChanged',
+                'recommendPicChanged'
             ],
             queues: {
                 WxUserPicChanged: {
@@ -115,7 +117,23 @@ module.exports = {
                                 return true
                             })
                     }
-                }
+                },
+                RecommendPicChanged: {
+                    topic: 'recommendPicChanged',
+                    consumer: ({
+                                   id,
+                                   pic
+                               }) => {
+                        logger.debug(`handle message recommendPicChanged: {id: ${id}, icon: ${pic}}`)
+                        return recommend.updatePic(id, pic)
+                            .then(() => {
+                                return true
+                            })
+                            .catch(e => {
+                                return true
+                            })
+                    }
+                },
             }
         }
     }

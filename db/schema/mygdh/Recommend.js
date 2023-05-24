@@ -5,10 +5,11 @@ const dbModel = createCollection({
     name: 'Recommend',
     schema: {
         name: {type: String, required: true},
-        pic: {type: String, required: true},
+        pic: {type: String},
         link: {type: String, required: true},
         desc: String,
-        enable: {type: Number, default: 1}
+        enable: {type: Number, default: 1},
+        sortNo:{type:Number,default:0}
     },
     indexes: [{
         index: {

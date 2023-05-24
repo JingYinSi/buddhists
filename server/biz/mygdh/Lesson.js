@@ -3,7 +3,9 @@ const schema = require('../../../db/schema/mygdh/Lesson'),
     subDocPath = 'instances',
     reportEntity = require('./Report'),
     moment = require('moment'),
-    {extend} = require('underscore')
+    {extend} = require('underscore'),
+    mqPublish = require('@finelets/hyper-rest/mq')
+
 const config = {
     schema,
     projection: ['name', 'title', 'pic', 'icon', 'incantation', 'sortNo', 'desc'],
