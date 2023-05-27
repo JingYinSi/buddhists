@@ -25,7 +25,6 @@ const dbModel = createCollection({
         prayerText: String,
         unionId: String,
         dayLessonInsNumber: {type: Number, default: 0},
-        lessonDays: {type: Number, default: 0},
         lessonIns: [lessonInSchema]
     },
     indexes: [

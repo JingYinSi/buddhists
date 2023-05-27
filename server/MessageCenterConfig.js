@@ -1,8 +1,9 @@
 const logger = require('@finelets/hyper-rest/app/Logger'),
-    PicGridFs = require('./biz').PicGridFs
-const Lesson = require('./biz/mygdh/Lesson'),
+    PicGridFs = require('./biz').PicGridFs,
+    Lesson = require('./biz/mygdh/Lesson'),
     WxUser = require('./biz/mygdh/WxUser'),
-    recommend= require("./biz/mygdh/Recommend")
+    recommend = require("./biz/mygdh/Recommend")
+
 module.exports = {
     connect: process.env.MQ,
     exchanges: {
@@ -103,15 +104,14 @@ module.exports = {
                         // 累加课程功课总报数
                         return Lesson.updateLessonInstance(msg)
                             .then(() => {
-                                // 累加用户的功课完成天数
-                                return WxUser.updateUserLesson(msg)
+                                return WxUser.updateDayLessons(msg)
                                     .then(() => {
-                                        // 累加用户的功课报数
-                                        return WxUser.updateLessonInstance(msg)
+                                        return WxUser.updateLessonReport(msg)
                                             .then(() => {
-                                                return true
+                                                return true;
                                             })
                                     })
+
                             })
                             .catch(e => {
                                 return true

@@ -4,7 +4,9 @@ const schema = require('../../../db/schema/mygdh/Lesson'),
     reportEntity = require('./Report'),
     moment = require('moment'),
     {extend} = require('underscore'),
-    mqPublish = require('@finelets/hyper-rest/mq')
+    mqPublish = require('@finelets/hyper-rest/mq'),
+    {promise} = require("sinon"),
+    _ = require("lodash");
 
 const config = {
     schema,
@@ -16,7 +18,7 @@ const config = {
 }
 
 const entity = createEntity(config)
-const obj = {
+const addIn = {
     updatePic: (id, pic) => {
         let oldPic
 
@@ -69,7 +71,7 @@ const obj = {
                 let text
                 return reportEntity.search(condi, text)
                     .then(function (list) {
-                        // 用户第一次报功课，总报数人数+1
+                        // 用户第一次报功课，总报数人数+1；第二次报功课时不再增加报数人数
                         let reportPopulations = 1
                         if (list.length >= 2) {
                             reportPopulations = 0
@@ -79,7 +81,7 @@ const obj = {
                         condi = {'user': msg.user, 'reportDate': reportDate, 'lessonIns': msg.lessonIns}
                         return reportEntity.search(condi, text)
                             .then(function (todayList) {
-                                //用户 当天第一次报功课，今日报数人数+1
+                                //用户 当天第一次报功课，今日报数人数+1；第二次报功课后不再增加人数
                                 let todayReportPopulations = 1
                                 if (todayList.length >= 2) {
                                     todayReportPopulations = 0
@@ -129,7 +131,25 @@ const obj = {
                 if (e.name === 'CastError') return false
                 throw e
             })
+    },
+    findLessonInstance: (instanceId) => {
+        return entity.findSubDocById(instanceId, subDocPath).then(function (lessonInstance) {
+            if (lessonInstance) {
+                lessonInstance.hasTarget = function () {
+                    return this.target && this.target > 0
+                }
+
+                lessonInstance.calculateTargetDays = function (totalTimes) {
+                    return Math.ceil(totalTimes / this.target)
+                }
+            }
+
+            const promise = new Promise((resolve, reject) => {
+                resolve(lessonInstance)
+            });
+            return promise;
+        });
     }
 }
 
-module.exports = extend(entity, obj)
+module.exports = extend(entity, addIn)

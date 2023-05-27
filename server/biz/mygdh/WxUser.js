@@ -1,13 +1,12 @@
-const schema = require('../../../db/schema/mygdh/WxUser'),
+const
+    schema = require('../../../db/schema/mygdh/WxUser'),
     createEntity = require('@finelets/hyper-rest/db/mongoDb/DbEntity'),
     mqPublish = require('@finelets/hyper-rest/mq'),
     subDocPath = 'lessonIns',
     reportEntity = require('./Report'),
     lessonEntity = require('./Lesson'),
-    lessonSubDocPath = 'instances',
-    moment = require('moment'),
     logger = require('@finelets/hyper-rest/app/Logger'),
-
+    _ = require('lodash'),
     UNKNOWN_WECHAT_NAME = "Unknown Wechat User",
     DEFAULT_ADMIN_ID = '$$$$defaultuserid$$admin',
     DEFAULT_ADMIN_NAME = '@admin@',
@@ -168,66 +167,71 @@ const obj = {
                 }
             })
     },
-    updateUserLesson: (msg) => {
+    updateDayLessons: (msg) => {
         return schema.findById(msg.user).then(doc => {
-            let reportDate = moment().format('yyyyMMDD')
-            let condi = {'user': msg.user, 'reportDate': reportDate, 'lessonIns': msg.lessonIns}
-            let text
-            return reportEntity.search(condi, text)
-                .then(function (list) {
-                    // 用户功课第一次报数 累加今日报数（几门功课）
-                    if (list.length <= 1) {
-                        doc.dayLessonInsNumber = doc.dayLessonInsNumber + 1
-                        return doc.save()
-                    }
-                    // return lessonEntity.findSubDocById(msg.lessonIns, lessonSubDocPath).then(lessonInsDoc => {
-                    //     if (lessonInsDoc && msg.times >= 1) {
-                    //         let reportPopulations = 1
-                    //         if (lessonInsDoc.target && lessonInsDoc.target >= 1) {
-                    //             reportPopulations = Math.ceil(msg.times / lessonInsDoc.target)
-                    //         }
-                    //         // 累加完成功课天数
-                    //         doc.lessonDays = doc.lessonDays + reportPopulations
-                    //         return doc.save()
-                    //     }
-                    // });
-                })
+            reportEntity.todayUserLessonReportCount(msg.user, msg.lessonIns).then(function (count) {
+                if (count === 1) { // 用户功课第一次报数 累加今日报数（几门功课）
+                    doc.dayLessonInsNumber = doc.dayLessonInsNumber + 1
+                    return doc.save()
+                }
+            })
         })
     },
-    updateLessonInstance: (msg) => {
-        return entity.listSubs(msg.user, subDocPath).then(list => {
-            let doc
-            if (list) {
-                //遍历找到本次报数的功课
-                list.forEach(function (item) {
-                    if (msg.lessonIns === item.lessonInsId) {
-                        doc = item
-                    }
-                });
-            }
-            if (doc) {
-                return lessonEntity.findSubDocById(msg.lessonIns, lessonSubDocPath).then(lessonInsDoc => {
-                    if (lessonInsDoc && msg.times >= 1) {
-                       doc.toUpdate = {
-                            dayTimes: doc.dayTimes + msg.times,
-                            weekTimes: doc.weekTimes + msg.times,
-                            monthTimes: doc.monthTimes + msg.times,
-                            totalTimes: doc.totalTimes + msg.times
-                        }
-                    }
-                    return entity.updateSubDoc(subDocPath, {...doc})
-                });
-            } else {
-                doc = {
-                    lessonInsId: msg.lessonIns,
-                    days: 0,
-                    dayTimes: msg.times,
-                    weekTimes: msg.times,
-                    monthTimes: msg.times,
-                    totalTimes: msg.times
+    findUserInstance: (userId, instanceId) => {
+        return entity.listSubs(userId, subDocPath).then(userLessonInstances => {
+            const promise = new Promise((resolve, reject) => {
+                let userLessonInstance = _.find(userLessonInstances, {lessonInsId: instanceId})
+                resolve(userLessonInstance)
+            });
+            return promise;
+        })
+    },
+    updateLessonReport: (msg) => {
+        return entity.findUserInstance(msg.user, msg.lessonIns).then(userLessonIns => {
+            return lessonEntity.findLessonInstance(msg.lessonIns).then(lessonIns => {
+                if (!lessonIns) {
+                    logger.error("can't find lesson instance by id(" + msg.lessonIns + ")")
+                    return false
                 }
-                return entity.createSubDoc(msg.user, subDocPath, doc)
-            }
+
+                reportEntity.todayUserLessonReportCount(msg.user, msg.lessonIns).then(function (todayReportCount) {
+                    let totalTimes = 0
+                    let days = 0
+                    if (!userLessonIns) { //首次创建用户课程实例
+                        totalTimes = msg.times
+                        if (lessonIns.hasTarget()) {
+                            days = lessonIns.calculateTargetDays(totalTimes)
+                        } else if (todayReportCount >= 1) {
+                            days = 1
+                        }
+                        userLessonIns = {
+                            lessonInsId: msg.lessonIns,
+                            days: days,
+                            dayTimes: msg.times,
+                            weekTimes: msg.times,
+                            monthTimes: msg.times,
+                            totalTimes: totalTimes
+                        }
+                        return entity.createSubDoc(msg.user, subDocPath, userLessonIns)
+                    } else {//更新用户课程实例报数
+                        totalTimes = userLessonIns.totalTimes + msg.times
+                        days = userLessonIns.days
+                        if (lessonIns.hasTarget()) {
+                            days = lessonIns.calculateTargetDays(totalTimes)
+                        } else if (todayReportCount === 1) {
+                            days = days + 1
+                        }
+                        userLessonIns.toUpdate = {
+                            dayTimes: userLessonIns.dayTimes + msg.times,
+                            weekTimes: userLessonIns.weekTimes + msg.times,
+                            monthTimes: userLessonIns.monthTimes + msg.times,
+                            totalTimes: totalTimes,
+                            days: days
+                        }
+                        return entity.updateSubDoc(subDocPath, {...userLessonIns})
+                    }
+                })
+            })
         }).catch(e => {
             if (e.name === 'CastError') return false
             throw e

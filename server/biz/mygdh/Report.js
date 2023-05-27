@@ -1,5 +1,9 @@
 const schema = require('../../../db/schema/mygdh/Report'),
-    createEntity = require('@finelets/hyper-rest/db/mongoDb/DbEntity')
+    createEntity = require('@finelets/hyper-rest/db/mongoDb/DbEntity'),
+    moment = require("moment/moment"),
+    {promise} = require("sinon"),
+    _ = require("lodash"),
+    {extend} = require("underscore");
 
 const config = {
     schema,
@@ -9,6 +13,21 @@ const config = {
     listable: ['user', 'lessonIns', 'times', 'reportDate', 'createdAt']
 }
 
-const addIn = {}
+const entity = createEntity(config)
 
-module.exports = createEntity(config, addIn)
+const addIn = {
+    todayUserLessonReportCount: (userId, lessonInsId) => {
+        let reportDate = moment().format('yyyyMMDD')
+        let condi = {'user': userId, 'reportDate': reportDate, 'lessonIns': lessonInsId}
+        let text
+        return entity.search(condi, text)
+            .then(function (list) {
+                const promise = new Promise((resolve, reject) => {
+                    resolve(list.length)
+                });
+                return promise;
+            })
+    }
+}
+
+module.exports = extend(entity, addIn)
