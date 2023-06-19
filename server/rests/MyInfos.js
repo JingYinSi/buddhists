@@ -17,7 +17,7 @@ const list = function (query, req) {
     return entity.search(condi, text)
         .then(function (list) {
             list.forEach(function (item){
-                item.data.prayerText='谢谢打卡'
+                item.prayerText='谢谢打卡'
             })
             return {
                 items: list
