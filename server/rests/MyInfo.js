@@ -21,6 +21,7 @@ module.exports = {
             handler: (id) => {
                 return findById(id).then(doc => {
                     let lessonInsCnt = doc.lessonIns.length
+                    doc.prayerText='谢谢打卡'
                     return {lessonInsCnt, ...doc}
                 })
             }
